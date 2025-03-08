@@ -18,7 +18,7 @@ def view_png_file(request, fileset_id, file_id):
         f = FileModel.objects.get(pk=file_id)
         file_path = os.path.join(settings.MEDIA_ROOT, f.path())
         if os.path.exists(file_path):
-            return render(request, 'views/pngview.html', context={'png_image': f, 'fileset_id': fileset_id})
+            return render(request, 'file.html', context={'file': f, 'file_type': 'png', 'fileset_id': fileset_id})
     return Http404(f'File {file_id} not found')
 
 
@@ -35,7 +35,7 @@ def view_csv_file(request, fileset_id, file_id):
                 raise Http404(f'File {file_id} is empty')
             headers = data[0]  # First row as headers
             rows = data[1:]
-            return render(request, 'views/csvview.html', context={'csv_file': f, 'headers': headers, 'rows': rows, 'fileset_id': fileset_id})
+            return render(request, 'file.html', context={'file': f, 'file_type': 'csv', 'fileset_id': fileset_id, 'headers': headers, 'rows': rows})
     return Http404(f'File {file_id} not found')
 
 
@@ -47,5 +47,5 @@ def view_text_file(request, fileset_id, file_id):
         if os.path.exists(file_path):
             with open(file_path, 'r', encoding='utf-8') as f_obj:
                 content = f_obj.read()
-            return render(request, 'views/textview.html', context={'txt_file': f, 'content': content, 'fileset_id': fileset_id})
+            return render(request, 'file.html', context={'file': f, 'file_type': 'txt', 'fileset_id': fileset_id, 'content': content})
     return Http404(f'File {file_id} not found')

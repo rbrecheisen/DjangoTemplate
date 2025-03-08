@@ -22,9 +22,10 @@ urlpatterns = [
     path('filesets/<str:fileset_id>/delete', delete_fileset),
     path('filesets/<str:fileset_id>/download', download_fileset),
 
-    # File viewers
+    # Files
     path('filesets/<str:fileset_id>/files/<str:file_id>/png', view_png_file),
     path('filesets/<str:fileset_id>/files/<str:file_id>/text', view_text_file),
     path('filesets/<str:fileset_id>/files/<str:file_id>/csv', view_csv_file),
 
+    # Custom viewers
 ]
