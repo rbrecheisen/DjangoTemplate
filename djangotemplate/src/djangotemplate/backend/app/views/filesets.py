@@ -49,7 +49,8 @@ def rename_fileset(request, fileset_id):
 def delete_fileset(request, fileset_id):
     if request.method == 'GET':
         data_manager = DataManager()
-        data_manager.delete_fileset(data_manager.get_fileset(fileset_id))
+        fileset = data_manager.get_fileset(fileset_id)
+        data_manager.delete_fileset(fileset)
         return redirect('/filesets/')
     return HttpResponseForbidden(f'Wrong method ({request.method})')
 
@@ -58,6 +59,7 @@ def delete_fileset(request, fileset_id):
 def download_fileset(request, fileset_id):
     if request.method == 'GET':
         data_manager = DataManager()
+        fileset = data_manager.get_fileset(fileset_id)
         zip_file_path = data_manager.get_zip_file_from_fileset(fileset)
         with open(zip_file_path, 'rb') as f:
             response = HttpResponse(FileWrapper(f), content_type='application/zip')
