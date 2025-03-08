@@ -34,6 +34,9 @@ def task(request, task_name):
         return render(request, f'tasks/{task_name.lower()}', context={
             'task_name': task_name, 
             'task_description': TASK_REGISTRY[task_name]['description'],
+            'inputs': TASK_REGISTRY[task_name]['inputs'],
+            'params': TASK_REGISTRY[task_name]['params'],
+            'outputs': TASK_REGISTRY[task_name]['outputs'],
             'filesets': data_manager.get_filesets(request.user)
         })
     return HttpResponseForbidden(f'Wrong method ({request.method})')

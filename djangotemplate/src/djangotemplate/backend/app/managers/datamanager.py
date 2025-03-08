@@ -1,8 +1,10 @@
 import os
+import shutil
 
 from os.path import basename
 from zipfile import ZipFile
 from django.utils import timezone
+from django.conf import settings
 from django.db.models import Q
 
 from ..models import FileModel, FileSetModel
@@ -24,6 +26,21 @@ class DataManager:
         fileset = FileSetModel.objects.create(_name=fileset_name, _owner=user)
         return fileset
        
+    def create_fileset_from_uploaded_files(self, user, file_paths, file_names, fileset_name: str):
+        if len(file_paths) == 0 or len(file_names) == 0:
+            return None
+        fileset = self.create_fileset(user, fileset_name)
+        for i in range(len(file_paths)):
+            source_path = file_paths[i]
+            target_name = file_names[i]
+            target_path = os.path.join(fileset.path(), target_name)
+            if not settings.DOCKER: # Hack: to deal with "file in use" error Windows
+                shutil.copy(source_path, target_path)
+            else:
+                shutil.move(source_path, target_path)
+            self.create_file(target_path, fileset)
+        return fileset
+
     @staticmethod
     def get_filesets(user):
         if not user.is_staff:

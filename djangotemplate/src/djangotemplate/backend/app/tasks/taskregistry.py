@@ -8,8 +8,21 @@ TASK_REGISTRY = {
             'input2',
         ],
         'params': [
-            'param1',
-            'param2',
+            {
+                'name': 'param1', 
+                'label': 'Parameter 1',
+                'type': 'int', 
+                'min': 0,
+                'max': 100,
+                'step': 1,
+                'value': 50,
+            },
+            {
+                'name': 'param2', 
+                'label': 'Parameter 2'
+                'type': 'text',
+                'value': '',
+            },
         ],
         'outputs': [ # Always type fileset
             'output1',

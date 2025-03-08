@@ -19,17 +19,33 @@
                 <div class="card-body">
                     <form action="/tasks/{{ task_name }}" method="post" enctype="multipart/form-data" id="my-form">
                         {% csrf_token %}
-                        <input type="hidden" name="task_name" value="{{ task_name }}">
-                        <input type="hidden" name="cancel" value="0">
-                        <select class="form-select" name="fileset">
-                            <option selected>Select files</option>
-                            {% for fileset in filesets %}
-                                <option value="{{ fileset.id }}">{{ fileset.name }}</option>
-                            {% endfor %}
-                        </select>
-                        <br>
-                        <label for="delay" class="form-label">Delay (s)</label>
-                        <input type="number" class="form-control" id="delay" name="delay" placeholder="Enter number" min="0" step="1" value="2">
+                        
+                        <p><b>Input filesets</b></p>
+                        {% for input_name in inputs %}
+                            <select class="form-select" name="{{ input_name }}">
+                                <option selected>Select fileset</option>
+                                {% for fileset in filesets %}
+                                    <option value="{{ fileset.id }}">{{ fileset.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <br>
+                        {% endfor %}
+
+                        <p><b>Parameters</b></p>
+                        {% for param in params %}
+                            <label for="{{ param.name }}" class="form-label">{{ param.label }}</label>
+                            {% if param.type == "int" or param.type == "float" %}
+                                <input type="number" class="form-control" id="{{ param.name }}" name="{{ param.name }}" placeholder="Enter number" min="{{ param.min }}" max="{{ param.max }}" step="{{ param.step }}" value="{{ param.value }}">
+                            {% endif %}
+                            {% if param.type == "text" %}
+                                <input type="text" class="form-control" id="{{ param.name }}" name="{{ param.name }}" placeholder="Enter text" value="{{ param.value }}">
+                            {% endif %}
+                            <br>
+                        {% endfor %}
+
+                        <p><b>Output fileset names</b></p>
+                        {% for output_name in outputs %}
+                        {% endfor %}
                         <br>
                         <button type="submit" class="btn btn-primary">Run task</button>
                     </form>

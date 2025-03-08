@@ -30,7 +30,7 @@ def upload_fileset(request):
         data_manager = DataManager()
         fileset_name = request.POST.get('fileset_name', None)
         file_paths, file_names = FileUploadManager().process_upload(request)
-        data_manager.create_fileset_from_uploaded_files(file_paths, file_names, fileset_name, request.user)
+        data_manager.create_fileset_from_uploaded_files(request.user, file_paths, file_names, fileset_name)
         return redirect('/filesets/')
     return HttpResponseForbidden(f'Wrong method ({request.method})')
 
@@ -49,7 +49,7 @@ def rename_fileset(request, fileset_id):
 def delete_fileset(request, fileset_id):
     if request.method == 'GET':
         data_manager = DataManager()
-        data_manager.delete_fileset(fileset)
+        data_manager.delete_fileset(data_manager.get_fileset(fileset_id))
         return redirect('/filesets/')
     return HttpResponseForbidden(f'Wrong method ({request.method})')
 

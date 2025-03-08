@@ -13,7 +13,7 @@
             <div class="card" style="margin-top: 10px;">
                 <div class="card-header">Filesets</div>
                 <div class="card-body">
-                    <form action="/filesets/" method="post" enctype="multipart/form-data">
+                    <form action="/filesets/upload" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <label for="files">Select files:</label>
                         <input type="file" id="files" name="files" multiple/><br>
