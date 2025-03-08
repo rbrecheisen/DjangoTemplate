@@ -9,6 +9,8 @@ def rename_files_and_dirs(directory, old_word, new_word):
     for root, dirs, files in os.walk(directory, topdown=False):  # bottom-up to rename files first
         # Rename files
         for file in files:
+            if file == 'rename_project.py':
+                continue            
             if old_word in file:
                 old_path = os.path.join(root, file)
                 new_path = os.path.join(root, file.replace(old_word, new_word))
@@ -27,6 +29,8 @@ def search_word_in_files(directory, search_word, extensions=EXTENSIONS):
     search_pattern = re.compile(re.escape(search_word))
     for root, _, files in os.walk(directory):
         for file in files:
+            if file == 'rename_project.py':
+                continue
             if file.endswith(extensions):
                 file_path = os.path.join(root, file)
                 try:
@@ -41,6 +45,8 @@ def search_word_in_files(directory, search_word, extensions=EXTENSIONS):
 def replace_word_in_files(directory, old_word, new_word, extensions=EXTENSIONS):  
     for root, _, files in os.walk(directory):
         for file in files:
+            if file == 'rename_project.py':
+                continue
             if file.endswith(extensions):
                 file_path = os.path.join(root, file)
                 with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
