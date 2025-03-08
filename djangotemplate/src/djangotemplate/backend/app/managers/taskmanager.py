@@ -16,12 +16,30 @@ class TaskManager:
     
     def task_names(self):
         return TASK_REGISTRY.keys()
+    
+    def task_ok(self, task_info, inputs, params):
+        for input_name in inputs.keys():
+            if not input_name in task_info['inputs']:
+                return False
+        for param_name in params.keys():
+            if not param_name in task_info['params']:
+                return False
+        return True
 
     def run_task(self, task_name, inputs, params, wait_to_finish=False):
         task_info = TASK_REGISTRY.get(task_name, None)
         if task_info:
+            # Check if the inputs and parameters match the task's info
+            if not self.task_ok(task_info, inputs, params):
+                message = f'Provided inputs ({inputs.keys()}) and parameters ({params.keys()}) do not match {task_name}\' registry settings:\n'
+                message += '[inputs]: {}\n'.format(task_info['inputs'])
+                message += '[parameters]: {}'.format(task_info['params'])
+                raise RuntimeError(message)
+            # If task is already in the list, cancel and remove it
             if task_name in self.tasks().keys():
-                raise RuntimeError(f'Task with name {task_name} already submitted. Clear task manager first')
+                self.cancel_task(task_name)
+                self.remove_task(task_name)
+            # Add the new task to the list with its own queue
             task_queue = queue.Queue()
             self.tasks()[task_name] = {
                 'instance': task_info['class'](
@@ -29,6 +47,7 @@ class TaskManager:
                 ),
                 'queue': task_queue,
             }
+            # Start the task and wait if necessary
             self.tasks()[task_name]['instance'].start()
             if wait_to_finish:
                 self.tasks()[task_name]['instance'].join()
