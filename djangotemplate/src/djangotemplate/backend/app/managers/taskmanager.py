@@ -12,10 +12,11 @@ class TaskManager:
     # TASKS
 
     def tasks(self):
-        return self._tasks
+        sorted_tasks = sorted(self._tasks.values(), key=lambda task: task.created())
+        return sorted_tasks
     
     def task_names(self):
-        return TASK_REGISTRY.keys()
+        return sorted(TASK_REGISTRY.keys())
     
     def task_ok(self, task_info, inputs, params):
         for input_name in inputs.keys():
@@ -36,36 +37,36 @@ class TaskManager:
                 message += '[parameters]: {}'.format(task_info['params'])
                 raise RuntimeError(message)
             # If task is already in the list, cancel and remove it
-            if task_name in self.tasks().keys():
+            if task_name in self._tasks.keys():
                 self.cancel_task(task_name)
                 self.remove_task(task_name)
             # Add the new task to the list with its own queue
             task_queue = queue.Queue()
-            self.tasks()[task_name] = {
+            self._tasks[task_name] = {
                 'instance': task_info['class'](
                     inputs, params, task_queue, self.task_finished
                 ),
                 'queue': task_queue,
             }
             # Start the task and wait if necessary
-            self.tasks()[task_name]['instance'].start()
+            self._tasks[task_name]['instance'].start()
             if wait_to_finish:
-                self.tasks()[task_name]['instance'].join()
+                self._tasks[task_name]['instance'].join()
 
     def cancel_task(self, task_name):
-        if task_name in self.tasks().keys():
-            self.tasks()[task_name]['instance'].cancel()
+        if task_name in self._tasks.keys():
+            self._tasks[task_name]['instance'].cancel()
 
     def cancel_all_tasks(self):
-        for task in self.tasks():
+        for task in self._tasks.values():
             task.cancel()
 
     def remove_task(self, task_name):
-        if task_name in self.tasks().keys():
-            del self.tasks()[task_name]
+        if task_name in self._tasks.keys():
+            del self._tasks[task_name]
 
     def remove_all_tasks(self):
-        self.tasks().clear()
+        self._tasks.clear()
 
     def task_finished(self, task_name):
         pass

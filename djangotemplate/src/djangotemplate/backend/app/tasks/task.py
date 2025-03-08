@@ -1,4 +1,6 @@
+import datetime
 import threading
+
 from enum import Enum
 
 
@@ -21,6 +23,7 @@ class Task(threading.Thread):
         self._cancel_event = threading.Event()
         self._progress = 0
         self._notify_finished_callback = notify_finished_callback
+        self._created = datetime.datetime.now()
 
     def name(self):
         return self._name
@@ -49,6 +52,9 @@ class Task(threading.Thread):
     
     def set_progress(self, step, nr_steps):
         self._progress = int(((step + 1) / (nr_steps)) * 100)
+
+    def created(self):
+        return self._created
         
     def run(self):
         try:
