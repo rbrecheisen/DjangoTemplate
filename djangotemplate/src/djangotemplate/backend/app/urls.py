@@ -1,8 +1,8 @@
 from django.urls import path
 
-from .views.misc import auth, custom_logout, logs, help
+from .views.miscellaneous import auth, custom_logout, logs, help
 from .views.filesets import filesets, fileset, upload_fileset, rename_fileset, delete_fileset, download_fileset
-from .views.files import view_png_file, view_text_file, view_csv_file
+from .views.files import png, txt, csv
 
 
 urlpatterns = [
@@ -23,9 +23,9 @@ urlpatterns = [
     path('filesets/<str:fileset_id>/download', download_fileset),
 
     # Files
-    path('filesets/<str:fileset_id>/files/<str:file_id>/png', view_png_file),
-    path('filesets/<str:fileset_id>/files/<str:file_id>/text', view_text_file),
-    path('filesets/<str:fileset_id>/files/<str:file_id>/csv', view_csv_file),
+    path('filesets/<str:fileset_id>/files/<str:file_id>/png', png),
+    path('filesets/<str:fileset_id>/files/<str:file_id>/text', txt),
+    path('filesets/<str:fileset_id>/files/<str:file_id>/csv', csv),
 
     # Custom viewers
 ]

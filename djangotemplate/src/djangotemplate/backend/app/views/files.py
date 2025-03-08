@@ -13,7 +13,7 @@ LOG = LogManager()
 
 
 @login_required
-def view_png_file(request, fileset_id, file_id):
+def png(request, fileset_id, file_id):
     if request.method == 'GET':
         f = FileModel.objects.get(pk=file_id)
         file_path = os.path.join(settings.MEDIA_ROOT, f.path())
@@ -23,7 +23,7 @@ def view_png_file(request, fileset_id, file_id):
 
 
 @login_required
-def view_csv_file(request, fileset_id, file_id):
+def csv(request, fileset_id, file_id):
     if request.method == 'GET':
         f = FileModel.objects.get(pk=file_id)
         file_path = os.path.join(settings.MEDIA_ROOT, f.path())
@@ -40,7 +40,7 @@ def view_csv_file(request, fileset_id, file_id):
 
 
 @login_required
-def view_text_file(request, fileset_id, file_id):
+def txt(request, fileset_id, file_id):
     if request.method == 'GET':
         f = FileModel.objects.get(pk=file_id)
         file_path = os.path.join(settings.MEDIA_ROOT, f.path())
