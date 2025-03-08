@@ -55,5 +55,20 @@ Tasks:
     - Output:
         - Result set (dataframe? CSV?)
 
+# Example applications
+
+## CastorDataExplorer
+This application allows users to run complex SQL queries on Castor data. The user starts with 
+a page where he can connect to Castor. This is a form where the user can specify the client ID, 
+secret. The "Connect" button makes the connection. 
+
+The following tasks are needed:
+- Connect to Castor
+- Retrieve records, field definitions and option groups (as CSV data)
+- Build Pandas dataframe
+- Build SQL database from Pandas dataframe
+- Create queries
+- Execute queries and display result sets
+
 # References
 - https://chatgpt.com/c/67cc7f9b-7518-800b-8713-4258670fa88c (How to dynamically create a SQLite3 and PostgreSQL database from a .sql file)

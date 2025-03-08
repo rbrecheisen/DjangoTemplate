@@ -17,10 +17,10 @@ class Task(threading.Thread):
         self._inputs = inputs
         self._params = params
         self._queue = queue
-        self._notify_finished_callback = notify_finished_callback
         self._status = TaskStatus.IDLE
         self._cancel_event = threading.Event()
         self._progress = 0
+        self._notify_finished_callback = notify_finished_callback
 
     def name(self):
         return self._name
@@ -34,6 +34,9 @@ class Task(threading.Thread):
         if name in self._params.keys():
             return self._params[name]
         return default
+    
+    def queue(self):
+        return self._queue
     
     def status(self):
         return self._status
@@ -50,10 +53,10 @@ class Task(threading.Thread):
     def run(self):
         try:
             self.set_status(TaskStatus.RUNNING)
-            self.execute()
+            output = self.execute()
             if not self.is_canceled():
-                # Enqueue result
-                # Notify task manager
+                self.queue().put(output)
+                self.notify_finished()
                 self.set_status(TaskStatus.COMPLETED)
         except Exception as e:
             self.set_status(TaskStatus.FAILED, str(e))
@@ -67,3 +70,6 @@ class Task(threading.Thread):
     def cancel(self):
         self._cancel_event.set()
         self.set_status(TaskStatus.CANCELED)
+
+    def notify_finished(self):
+        self._notify_finished_callback()
