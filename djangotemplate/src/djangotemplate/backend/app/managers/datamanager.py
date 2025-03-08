@@ -6,8 +6,10 @@ from django.utils import timezone
 from django.db.models import Q
 
 from ..models import FileModel, FileSetModel
+from ..singleton import singleton
 
 
+@singleton
 class DataManager:
     @staticmethod
     def create_file(path, fileset):

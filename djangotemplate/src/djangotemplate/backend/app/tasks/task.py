@@ -11,9 +11,9 @@ class TaskStatus(Enum):
     
 
 class Task(threading.Thread):
-    def __init__(self, name, inputs, params, queue, notify_finished_callback):
+    def __init__(self, inputs, params, queue, notify_finished_callback):
         super(Task, self).__init__()
-        self._name = name
+        self._name = self.__class__.__name__
         self._inputs = inputs
         self._params = params
         self._queue = queue

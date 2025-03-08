@@ -8,6 +8,21 @@
             integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script type="text/javascript" src="https://unpkg.com/@babel/polyfill@7.0.0/dist/polyfill.js"></script>
+        <script>
+            function autoRefresh() {
+                let href = window.location.href;
+                if(document.getElementById('auto-refresh').checked) {
+                        if(href.endsWith('?auto-refresh=1') === false) {
+                            href = window.location.href + '?auto-refresh=1';
+                        }
+                    } else {
+                        if(href.endsWith('?auto-refresh=1')) {
+                            href = href.substring(0, href.length - 15);
+                        }
+                    }
+                window.location = href;
+            }
+        </script>
         {% if auto_refresh == 1 %}
             <meta http-equiv="refresh" content="2">
         {% endif %}
