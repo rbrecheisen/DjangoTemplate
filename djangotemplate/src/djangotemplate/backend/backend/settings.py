@@ -14,6 +14,12 @@ SECRET_KEY = os.getenv(
 
 DOCKER = True if os.getenv('DOCKER') == '1' else False
 
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:8000', 
+    # 'http://127.0.0.1:8000', 
+    # 'http://137.120.191.233:8000'
+]
+
 DEBUG = True
 
 ALLOWED_HOSTS = []
