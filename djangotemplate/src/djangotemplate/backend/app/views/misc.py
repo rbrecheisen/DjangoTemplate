@@ -22,6 +22,11 @@ def custom_logout(request: HttpRequest) -> HttpResponse:
 
 
 @login_required
+def help(request):
+    return render(request, 'help/index.html')
+
+
+@login_required
 def logs(request: HttpRequest) -> HttpResponse:
     manager = LogManager()
     if request.method == 'POST':
