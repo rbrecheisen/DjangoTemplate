@@ -1,0 +1,16 @@
+{% extends "../base.html" %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row"><p style="margin-top: 10px">[<a href="/filesets/{{ fileset_id }}">Back</a>]</p></div>
+    <div class="row">
+        <div class="col-sm-10">
+            <div class="card" style="margin-top: 10px;">
+                <div class="card-header"><b>PNG viewer</b></div>
+                <div class="card-body">
+                    <img src="/filesets/{{ fileset_id }}/files/{{ png_image.id }}">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

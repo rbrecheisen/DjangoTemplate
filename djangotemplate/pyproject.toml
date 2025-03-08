@@ -1,0 +1,104 @@
+# This project was generated with 0.3.22 using template: https://github.com/beeware/briefcase-template@v0.3.22
+[tool.briefcase]
+project_name = "Django Template"
+bundle = "com.rbeesoft"
+version = "0.0.1"
+url = "https://rbeesoft.com/djangotemplate"
+license.file = "LICENSE"
+author = "Ralph Brecheisen"
+author_email = "ralph.brecheisen@gmail.com"
+
+[tool.briefcase.app.djangotemplate]
+formal_name = "Django Template"
+description = "Django Template project"
+long_description = """More details about the app should go here.
+"""
+sources = [
+    "src/djangotemplate",
+]
+test_sources = [
+    "tests",
+]
+console_app = true
+
+requires = [
+    "django",
+    "django-jinja",
+    "django-session-security",
+    "django-guardian",
+    "django-crispy-forms",
+    "crispy-bootstrap5",
+    "pendulum",
+]
+test_requires = [
+    "pytest",
+]
+
+[tool.briefcase.app.djangotemplate.macOS]
+universal_build = true
+requires = [
+    # Add your macOS-specific app requirements here
+]
+
+[tool.briefcase.app.djangotemplate.linux]
+requires = [
+    # Add your Linux-specific app requirements here
+]
+
+[tool.briefcase.app.djangotemplate.linux.system.debian]
+system_requires = [
+    # Add any system packages needed at build the app here
+]
+
+system_runtime_requires = [
+    # Add any system packages needed at runtime here
+]
+
+[tool.briefcase.app.djangotemplate.linux.system.rhel]
+system_requires = [
+    # Add any system packages needed at build the app here
+]
+
+system_runtime_requires = [
+    # Add any system packages needed at runtime here
+]
+
+[tool.briefcase.app.djangotemplate.linux.system.suse]
+system_requires = [
+    # Add any system packages needed at build the app here
+]
+
+system_runtime_requires = [
+    # Add any system packages needed at runtime here
+]
+
+[tool.briefcase.app.djangotemplate.linux.system.arch]
+system_requires = [
+    # Add any system packages needed at build the app here
+]
+
+system_runtime_requires = [
+    # Add any system packages needed at runtime here
+]
+
+[tool.briefcase.app.djangotemplate.linux.flatpak]
+flatpak_runtime = "org.freedesktop.Platform"
+flatpak_runtime_version = "24.08"
+flatpak_sdk = "org.freedesktop.Sdk"
+
+[tool.briefcase.app.djangotemplate.windows]
+requires = [
+    # Add your Windows-specific app requirements here
+]
+
+# Mobile deployments
+[tool.briefcase.app.djangotemplate.iOS]
+supported = false
+
+[tool.briefcase.app.djangotemplate.android]
+supported = false
+
+# Web deployments
+[tool.briefcase.app.djangotemplate.web]
+supported = false
+
