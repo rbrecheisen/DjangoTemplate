@@ -19,7 +19,7 @@ TASK_REGISTRY = {
             },
             {
                 'name': 'param2', 
-                'label': 'Parameter 2'
+                'label': 'Parameter 2',
                 'type': 'text',
                 'value': '',
             },

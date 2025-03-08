@@ -31,7 +31,7 @@ def tasks(request):
 def task(request, task_name):
     if request.method == 'GET':
         data_manager = DataManager()
-        return render(request, f'tasks/{task_name.lower()}', context={
+        return render(request, f'tasks/{task_name.lower()}.html', context={
             'task_name': task_name, 
             'task_description': TASK_REGISTRY[task_name]['description'],
             'inputs': TASK_REGISTRY[task_name]['inputs'],
