@@ -1,8 +1,10 @@
 from django.urls import path
 
-from .views.misc import auth, custom_logout, logs, help
+from .views.misc import auth, custom_logout, logs
 from .views.filesets import filesets, fileset, upload_fileset, rename_fileset, delete_fileset, download_fileset
 from .views.files import view_png_file, view_text_file, view_csv_file
+
+from .views.viewers.helpviewer import help
 
 
 urlpatterns = [
