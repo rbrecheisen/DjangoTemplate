@@ -50,7 +50,28 @@ def run_task(request, task_name):
     3. Run task
     4. Redirect to /tasks/
     """
-    pass
+    if request.method == 'POST':
+        # Get inputs and parameters from request
+        data_manager = DataManager()
+        task_info = TASK_REGISTRY[task_name]
+        inputs = {}
+        for input in task_info['inputs']:
+            fileset_id = request.POST.get(input['name'])
+            if fileset_id:
+                inputs[input['name']] = data_manager.fileset(fileset_id)
+        params = {}
+        for param in task_info['params']:
+            param_value = request.POST.get(param['name'], None)
+            if param_value:
+                params[param['name']] = param_value
+        outputs = {}
+        for output in task_info['outputs']:
+            outputs[output['name']] = []
+        # Run task though task manager
+        task_manager = TaskManager()
+        task_manager.run_task(task_name, inputs, outputs, params)
+        return redirect('/tasks/')
+    return HttpResponseForbidden(f'Wrong method ({request.method})')
 
 
 @login_required

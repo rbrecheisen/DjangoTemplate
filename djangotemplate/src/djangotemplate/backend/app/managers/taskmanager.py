@@ -20,7 +20,10 @@ class TaskManager:
     # TASKS
 
     def tasks(self):
-        sorted_tasks = sorted(self._tasks.values(), key=lambda task: task.created())
+        tasks = []
+        for task_name in self._tasks.keys():
+            tasks.append(self._tasks[task_name]['instance'])
+        sorted_tasks = sorted(tasks, key=lambda task: task.created())
         return sorted_tasks
     
     def task_names(self):
