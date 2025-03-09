@@ -26,7 +26,7 @@ class DataManager:
         fileset = FileSetModel.objects.create(_name=fileset_name, _owner=user)
         return fileset
        
-    def create_fileset_from_uploaded_files(self, user, file_paths, file_names, fileset_name: str):
+    def create_fileset_from_uploaded_files(self, user, file_paths, file_names, fileset_name):
         if len(file_paths) == 0 or len(file_names) == 0:
             return None
         fileset = self.create_fileset(user, fileset_name)
@@ -42,25 +42,21 @@ class DataManager:
         return fileset
 
     @staticmethod
-    def get_filesets(user):
+    def filesets(user):
         if not user.is_staff:
             return FileSetModel.objects.filter(Q(_owner=user))
         return FileSetModel.objects.all()
 
     @staticmethod
-    def get_fileset(fileset_id):
+    def fileset(fileset_id):
         return FileSetModel.objects.get(pk=fileset_id)
     
     @staticmethod
-    def get_fileset_by_name(fileset_name):
+    def fileset_by_name(fileset_name):
         return FileSetModel.objects.filter(_name=fileset_name).first()
     
     @staticmethod
-    def get_fileset_by_name(fileset_name):
-        return FileSetModel.objects.filter(_name=fileset_name).first()
-    
-    @staticmethod
-    def get_files(fileset):
+    def files(fileset):
         return FileModel.objects.filter(_fileset=fileset).all()
 
     @staticmethod
@@ -73,8 +69,8 @@ class DataManager:
         fileset.save()
         return fileset
 
-    def get_zip_file_from_fileset(self, fileset):
-        files = self.get_files(fileset)
+    def create_zip_file_from_fileset(self, fileset):
+        files = self.files(fileset)
         zip_file_path = os.path.join(fileset.path(), '{}.zip'.format(fileset.name()))
         with ZipFile(zip_file_path, 'w') as zip_obj:
             for f in files:

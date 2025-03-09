@@ -61,7 +61,7 @@ class Task(threading.Thread):
 
     def created(self):
         return self._created
-        
+    
     def run(self):
         try:
             self.set_status(TaskStatus.RUNNING)

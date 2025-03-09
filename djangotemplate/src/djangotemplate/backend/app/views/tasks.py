@@ -37,7 +37,7 @@ def task(request, task_name):
             'inputs': TASK_REGISTRY[task_name]['inputs'],
             'params': TASK_REGISTRY[task_name]['params'],
             'outputs': TASK_REGISTRY[task_name]['outputs'],
-            'filesets': data_manager.get_filesets(request.user)
+            'filesets': data_manager.filesets(request.user)
         })
     return HttpResponseForbidden(f'Wrong method ({request.method})')
 
@@ -45,7 +45,7 @@ def task(request, task_name):
 @login_required
 def run_task(request, task_name):
     """
-    1. Get input fileset IDs and parameters from request
+    1. Get input fileset IDs and parameters from request (ensure correct data types)
     2. Pass them to task manager
     3. Run task
     4. Redirect to /tasks/

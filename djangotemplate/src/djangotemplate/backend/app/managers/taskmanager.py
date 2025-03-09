@@ -2,6 +2,7 @@ import queue
 
 from ..tasks.taskregistry import TASK_REGISTRY
 from ..singleton import singleton
+from ..managers.datamanager import DataManager
 from ..managers.logmanager import LogManager
 
 LOG = LogManager()
@@ -9,8 +10,12 @@ LOG = LogManager()
 
 @singleton
 class TaskManager:
-    def __init__(self):
+    def __init__(self, user=None):
+        self._user = user
         self._tasks = {}
+
+    def user(self):
+        return self._user
 
     # TASKS
 
@@ -47,6 +52,7 @@ class TaskManager:
             if task_name in self._tasks.keys():
                 self.cancel_task(task_name)
                 self.remove_task(task_name)
+            # Get user from one of the input filesets. Does that make sense?
             # Add the new task to the list with its own queue
             task_queue = queue.Queue()
             self._tasks[task_name] = {
@@ -78,8 +84,16 @@ class TaskManager:
     def task_finished(self, task_name):
         task_info = TASK_REGISTRY.get(task_name, None)
         if task_info:
-            # Get output fileset names
-            pass
+            # Get outputs
+            task_queue = self._tasks[task_name]['queue']
+            outputs = task_queue.get() # Dictionary of lists of file paths
+            # Create fileset for each output
+            data_manager = DataManager()
+            for output in task_info['outputs']:
+                fileset = data_manager.create_fileset(self.user(), output['name'])
+                file_paths = outputs[output['name']]
+                for file_path in file_paths:
+                    data_manager.create_file(file_path, fileset)
 
     # PIPELINES
 

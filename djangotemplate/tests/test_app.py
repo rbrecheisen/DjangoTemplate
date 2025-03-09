@@ -37,7 +37,7 @@ def test_user_can_run_example_task():
     }, params={
         'nr_iters': nr_iters,
         'delay': delay,
-    })
+    }, wait_to_finish=True)
 
     # Wait a few seconds for the output to appear
     duration = nr_iters * delay + 1
@@ -45,5 +45,5 @@ def test_user_can_run_example_task():
     time.sleep(duration)
 
     # Get output fileset
-    output_fileset = data_manager.get_fileset_by_name('output1')
+    output_fileset = data_manager.fileset_by_name('output1')
     assert output_fileset

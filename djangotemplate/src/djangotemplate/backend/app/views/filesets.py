@@ -11,7 +11,7 @@ from ..managers.datamanager import DataManager
 def filesets(request):
     if request.method == 'GET':
         data_manager = DataManager()
-        return render(request, 'filesets.html', context={'filesets': data_manager.get_filesets(request.user)})
+        return render(request, 'filesets.html', context={'filesets': data_manager.filesets(request.user)})
     return HttpResponseForbidden(f'Wrong method ({request.method})')
 
 
@@ -19,8 +19,8 @@ def filesets(request):
 def fileset(request, fileset_id):
     if request.method == 'GET':
         data_manager = DataManager()
-        fileset = data_manager.get_fileset(fileset_id)
-        return render(request, 'fileset.html', context={'fileset': fileset, 'files': data_manager.get_files(fileset)})
+        fileset = data_manager.fileset(fileset_id)
+        return render(request, 'fileset.html', context={'fileset': fileset, 'files': data_manager.files(fileset)})
     return HttpResponseForbidden(f'Wrong method ({request.method})')
 
 
@@ -39,7 +39,7 @@ def upload_fileset(request):
 def rename_fileset(request, fileset_id):
     if request.method == 'POST':
         data_manager = DataManager()
-        fileset = data_manager.get_fileset(fileset_id)
+        fileset = data_manager.fileset(fileset_id)
         fileset = data_manager.rename_fileset(fileset, request.POST.get('new_name'))
         return redirect(f'/filesets/{fileset_id}')
     return HttpResponseForbidden(f'Wrong method ({request.method})')
@@ -49,7 +49,7 @@ def rename_fileset(request, fileset_id):
 def delete_fileset(request, fileset_id):
     if request.method == 'GET':
         data_manager = DataManager()
-        fileset = data_manager.get_fileset(fileset_id)
+        fileset = data_manager.fileset(fileset_id)
         data_manager.delete_fileset(fileset)
         return redirect('/filesets/')
     return HttpResponseForbidden(f'Wrong method ({request.method})')
@@ -59,8 +59,8 @@ def delete_fileset(request, fileset_id):
 def download_fileset(request, fileset_id):
     if request.method == 'GET':
         data_manager = DataManager()
-        fileset = data_manager.get_fileset(fileset_id)
-        zip_file_path = data_manager.get_zip_file_from_fileset(fileset)
+        fileset = data_manager.fileset(fileset_id)
+        zip_file_path = data_manager.create_zip_file_from_fileset(fileset)
         with open(zip_file_path, 'rb') as f:
             response = HttpResponse(FileWrapper(f), content_type='application/zip')
             response['Content-Disposition'] = 'attachment; filename="{}.zip"'.format(fileset.name)
