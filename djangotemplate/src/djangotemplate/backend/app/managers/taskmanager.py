@@ -2,6 +2,9 @@ import queue
 
 from ..tasks.taskregistry import TASK_REGISTRY
 from ..singleton import singleton
+from ..managers.logmanager import LogManager
+
+LOG = LogManager()
 
 
 @singleton
@@ -19,23 +22,27 @@ class TaskManager:
         return sorted(TASK_REGISTRY.keys())
     
     def task_ok(self, task_info, inputs, outputs, params):
-        for input_name in inputs.keys():
-            if not input_name in task_info['inputs']:
+        for input in task_info['inputs']:
+            if input['name'] not in inputs.keys():
+                LOG.error('Input {} missing'.format(input['name']))
                 return False
-        for output_name in inputs.keys():
-            if not output_name in task_info['outputs']:
+        for output in task_info['outputs']:
+            if output['name'] not in outputs.keys():
+                LOG.error('Output {} missing'.format(output['name']))
                 return False
-        for param_name in params.keys():
-            if not param_name in task_info['params']:
+        for param in task_info['params']:
+            if param['name'] not in params.keys():
+                LOG.error('Parameter {} missing'.format(param['name']))
                 return False
+            # TODO: Check param types as well
         return True
-
+    
     def run_task(self, task_name, inputs, outputs, params, wait_to_finish=False):
         task_info = TASK_REGISTRY.get(task_name, None)
         if task_info:
-            # Check if the inputs and parameters match the task's info
+            # Check if task inputs, outputs and params match registry
             if not self.task_ok(task_info, inputs, outputs, params):
-                raise RuntimeError(f'Task {task_name} inputs, outputs or parameters do not match registry')
+                raise RuntimeError(f'Inputs, outputs or parameters provided for {task_name} do not match registry')
             # If task is already in the list, cancel and remove it
             if task_name in self._tasks.keys():
                 self.cancel_task(task_name)

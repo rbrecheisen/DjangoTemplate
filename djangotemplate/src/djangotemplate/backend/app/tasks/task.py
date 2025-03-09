@@ -50,7 +50,7 @@ class Task(threading.Thread):
     def status(self):
         return self._status
 
-    def set_status(self, status):
+    def set_status(self, status, message=None):
         self._status = status
 
     def progress(self):

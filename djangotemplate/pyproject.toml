@@ -32,6 +32,7 @@ requires = [
 ]
 test_requires = [
     "pytest",
+    "pytest-django",
 ]
 
 [tool.briefcase.app.djangotemplate.macOS]
