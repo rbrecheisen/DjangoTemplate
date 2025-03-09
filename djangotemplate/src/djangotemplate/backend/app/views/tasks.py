@@ -19,7 +19,7 @@ def tasks(request):
                 break
         if all_finished:
             auto_refresh = False
-        return render(request, 'tasks/tasks.html', context={
+        return render(request, 'tasks.html', context={
             'task_names': task_manager.task_names(),
             'tasks': task_manager.tasks(),
             'auto_refresh': auto_refresh,
@@ -31,7 +31,7 @@ def tasks(request):
 def task(request, task_name):
     if request.method == 'GET':
         data_manager = DataManager()
-        return render(request, f'tasks/{task_name.lower()}.html', context={
+        return render(request, f'task.html', context={
             'task_name': task_name, 
             'task_description': TASK_REGISTRY[task_name]['description'],
             'inputs': TASK_REGISTRY[task_name]['inputs'],

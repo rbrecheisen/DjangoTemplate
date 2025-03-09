@@ -13,10 +13,11 @@ class TaskStatus(Enum):
     
 
 class Task(threading.Thread):
-    def __init__(self, inputs, params, queue, notify_finished_callback):
+    def __init__(self, inputs, outputs, params, queue, notify_finished_callback):
         super(Task, self).__init__()
         self._name = self.__class__.__name__
         self._inputs = inputs
+        self._outputs = outputs
         self._params = params
         self._queue = queue
         self._status = TaskStatus.IDLE
@@ -31,6 +32,11 @@ class Task(threading.Thread):
     def input(self, name):
         if name in self._inputs.keys():
             return self._inputs[name]
+        return None
+    
+    def output(self, name):
+        if name in self._outputs.keys():
+            return self._outputs[name]
         return None
     
     def param(self, name, default=None):

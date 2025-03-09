@@ -1,4 +1,4 @@
-{% extends "../base.html" %}
+{% extends "base.html" %}
 {% load extra_filters %}
 {% block content %}
 <div class="container-fluid">
@@ -11,13 +11,13 @@
                     <i>{{ task_description }}</i>
                 </div>
                 <div class="card-body">
-                    <form action="/tasks/{{ task_name }}" method="post" enctype="multipart/form-data" id="my-form">
+                    <form action="/tasks/{{ task_name }}/run" method="post" enctype="multipart/form-data" id="my-form">
                         {% csrf_token %}
                         
                         <p><b>Input filesets</b></p>
-                        {% for input_name in inputs %}
-                            <select class="form-select" name="{{ input_name }}">
-                                <option selected>Select fileset</option>
+                        {% for input in inputs %}
+                            <select class="form-select" id="{{ input.name }}" name="{{ input.name }}">
+                                <option selected>{{ input.label }}</option>
                                 {% for fileset in filesets %}
                                     <option value="{{ fileset.id }}">{{ fileset.name }}</option>
                                 {% endfor %}
@@ -38,9 +38,10 @@
                         {% endfor %}
 
                         <p><b>Output fileset names</b></p>
-                        {% for output_name in outputs %}
+                        {% for output in outputs %}
+                            <input type="text" class="form-control" id="{{ output.name }}" name="{{ output.name }}" placeholder="{{ output.label }} (optional)">
+                            <br>
                         {% endfor %}
-                        <br>
                         <button type="submit" class="btn btn-primary">Run task</button>
                     </form>
                 </div>

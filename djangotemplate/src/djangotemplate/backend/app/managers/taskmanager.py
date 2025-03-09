@@ -18,24 +18,24 @@ class TaskManager:
     def task_names(self):
         return sorted(TASK_REGISTRY.keys())
     
-    def task_ok(self, task_info, inputs, params):
+    def task_ok(self, task_info, inputs, outputs, params):
         for input_name in inputs.keys():
             if not input_name in task_info['inputs']:
+                return False
+        for output_name in inputs.keys():
+            if not output_name in task_info['outputs']:
                 return False
         for param_name in params.keys():
             if not param_name in task_info['params']:
                 return False
         return True
 
-    def run_task(self, task_name, inputs, params, wait_to_finish=False):
+    def run_task(self, task_name, inputs, outputs, params, wait_to_finish=False):
         task_info = TASK_REGISTRY.get(task_name, None)
         if task_info:
             # Check if the inputs and parameters match the task's info
-            if not self.task_ok(task_info, inputs, params):
-                message = f'Provided inputs ({inputs.keys()}) and parameters ({params.keys()}) do not match {task_name}\' registry settings:\n'
-                message += '[inputs]: {}\n'.format(task_info['inputs'])
-                message += '[parameters]: {}'.format(task_info['params'])
-                raise RuntimeError(message)
+            if not self.task_ok(task_info, inputs, outputs, params):
+                raise RuntimeError(f'Task {task_name} inputs, outputs or parameters do not match registry')
             # If task is already in the list, cancel and remove it
             if task_name in self._tasks.keys():
                 self.cancel_task(task_name)
@@ -44,7 +44,7 @@ class TaskManager:
             task_queue = queue.Queue()
             self._tasks[task_name] = {
                 'instance': task_info['class'](
-                    inputs, params, task_queue, self.task_finished
+                    inputs, outputs, params, task_queue, self.task_finished
                 ),
                 'queue': task_queue,
             }
@@ -69,7 +69,10 @@ class TaskManager:
         self._tasks.clear()
 
     def task_finished(self, task_name):
-        pass
+        task_info = TASK_REGISTRY.get(task_name, None)
+        if task_info:
+            # Get output fileset names
+            pass
 
     # PIPELINES
 
