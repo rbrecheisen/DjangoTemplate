@@ -2,7 +2,7 @@ import logging
 
 from ..models import LogOutputModel
 
-LOG = logging.getLogger('djangotemplate')
+LOG = logging.getLogger('mydjangoapp')
 
 
 class LogManager:

@@ -16,7 +16,7 @@ RUN pip install --upgrade pip setuptools wheel && pip install -r /requirements.t
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN dos2unix /docker-entrypoint.sh
 
-COPY djangotemplate/src/djangotemplate /src
+COPY mydjangoapp/src/mydjangoapp /src
 
 WORKDIR /src
 

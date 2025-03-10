@@ -66,16 +66,16 @@ def main():
     args, _ = parser.parse_known_args() # Ignore any Briefcase args 
     if args.files_and_dirs:
         print('Renaming files and directories...')
-        rename_files_and_dirs('.', 'djangotemplate', args.name.lower())
+        rename_files_and_dirs('.', 'mydjangoapp', args.name.lower())
     elif args.file_contents:
         print('Renaming file contents...')
-        replace_word_in_files('.', 'djangotemplate', args.name.lower())
-        replace_word_in_files('.', 'DjangoTemplate', args.name)
+        replace_word_in_files('.', 'mydjangoapp', args.name.lower())
+        replace_word_in_files('.', 'MyDjangoApp', args.name)
     else:
         print('Renaming all...')
-        rename_files_and_dirs('.', 'djangotemplate', args.name.lower())
-        replace_word_in_files('.', 'djangotemplate', args.name.lower())
-        replace_word_in_files('.', 'DjangoTemplate', args.name)
+        rename_files_and_dirs('.', 'mydjangoapp', args.name.lower())
+        replace_word_in_files('.', 'mydjangoapp', args.name.lower())
+        replace_word_in_files('.', 'MyDjangoApp', args.name)
 
 
 if __name__ == '__main__':

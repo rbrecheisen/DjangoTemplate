@@ -1,5 +1,5 @@
 {
     "python.analysis.extraPaths": [
-        "./djangotemplate/src/djangotemplate/backend"
+        "./mydjangoapp/src/mydjangoapp/backend"
     ]
 }

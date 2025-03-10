@@ -17,7 +17,7 @@ def run_server():
     os.chdir(appPath)
     
     print('##############################################################################')
-    print('#                   D J A N G O   T E M P L A T E                            #')
+    print('#                      M Y   D J A N G O   A P P                             #')
     print('##############################################################################')
     
     execute_from_command_line(['manage.py', 'makemigrations'])
@@ -28,5 +28,5 @@ def run_server():
 
 
 def main():
-    print('Running Django Template server...')
+    print('Running My Django App server...')
     run_server()

@@ -4,7 +4,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DATA_DIR_LOCAL = os.path.join(Path.home(), 'DjangoTemplate/data')
+DATA_DIR_LOCAL = os.path.join(Path.home(), 'MyDjangoApp/data')
 DATA_DIR = os.environ.get('DATA_DIR', DATA_DIR_LOCAL)
 
 SECRET_KEY = os.getenv(
@@ -97,7 +97,7 @@ LOGGING = {
             'level': 'INFO',
             'propagate': False,
         },
-        'djangotemplate': {
+        'mydjangoapp': {
             'handlers': ['console'],
             'level': 'INFO',
             'propagate': False,
