@@ -60,10 +60,9 @@ def replace_word_in_files(directory, old_word, new_word, extensions=EXTENSIONS):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--name', help='New name for project')
+    parser.add_argument('name', help='New name for project')
     parser.add_argument('--files-and-dirs', action='store_true', help='Renames files and directories')
     parser.add_argument('--file-contents', action='store_true', help='Renames file contents')
-    parser.add_argument('--all', action='store_true', help='Renames files, directories and occurences inside files')
     args, _ = parser.parse_known_args() # Ignore any Briefcase args 
     if args.files_and_dirs:
         print('Renaming files and directories...')
@@ -72,14 +71,11 @@ def main():
         print('Renaming file contents...')
         replace_word_in_files('.', 'djangotemplate', args.name.lower())
         replace_word_in_files('.', 'DjangoTemplate', args.name)
-    elif args.all:
+    else:
         print('Renaming all...')
         rename_files_and_dirs('.', 'djangotemplate', args.name.lower())
         replace_word_in_files('.', 'djangotemplate', args.name.lower())
         replace_word_in_files('.', 'DjangoTemplate', args.name)
-    else:
-        search_word_in_files('.', 'djangotemplate')
-        search_word_in_files('.', 'DjangoTemplate')
 
 
 if __name__ == '__main__':
