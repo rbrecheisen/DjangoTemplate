@@ -2,7 +2,7 @@ import os
 import re
 import argparse
 
-EXTENSIONS = ('.txt', '.py', '.html', '.css', '.js', '.toml', '.rst', '.yml', '.yaml', 'Dockerfile', 'dockerfile', '.conf')
+EXTENSIONS = ('.txt', '.py', '.html', '.css', '.js', '.toml', '.rst', '.yml', '.yaml', 'Dockerfile', 'dockerfile', '.conf', '.ini')
 
 
 def rename_files_and_dirs(directory, old_word, new_word):
