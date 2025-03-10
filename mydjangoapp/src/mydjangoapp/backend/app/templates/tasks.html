@@ -37,20 +37,24 @@
                             <th>Task name</th>
                             <th>Status</th>
                             <th>Progress</th>
+                            <th>Created</th>
                             <th>Commands</th>
                         </tr>
                         {% for task in tasks %}
-                            <td>{{ task.name }}</td>
-                            <td>{{ task.status }}</td>
-                            <td>{{ task.progress }}</td>
-                            <td>
-                                {% if task.status == "running" %}
-                                    <a href="/tasks/{{ task.name }}/cancel">[cancel]</a>
-                                {% endif %}
-                                {% if task.status == "completed" or task.status == "failed" or task.status == "canceled" %}
-                                    <a href="/tasks/{{ task.name }}/remove">[remove]</a>
-                                {% endif %}
-                            </td>
+                            <tr>
+                                <td>{{ task.name }}</td>
+                                <td>{{ task.status }}</td>
+                                <td>{{ task.progress }}</td>
+                                <td>{{ task.created }}</td>
+                                <td>
+                                    {% if task.status == "running" %}
+                                        <a href="/tasks/{{ task.id }}/cancel">[cancel]</a>
+                                    {% endif %}
+                                    {% if task.status == "completed" or task.status == "failed" or task.status == "canceled" %}
+                                        <a href="/tasks/{{ task.id }}/remove">[remove]</a>
+                                    {% endif %}
+                                </td>
+                            </tr>
                         {% endfor %}
                     </table>
                 </div>

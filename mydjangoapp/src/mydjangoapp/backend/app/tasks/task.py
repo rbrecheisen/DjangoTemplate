@@ -1,3 +1,4 @@
+import uuid
 import datetime
 import threading
 
@@ -19,6 +20,7 @@ class TaskStatus(Enum):
 class Task(threading.Thread):
     def __init__(self, inputs, outputs, params, queue, notify_finished_callback):
         super(Task, self).__init__()
+        self._id = str(uuid.uuid4())
         self._name = self.__class__.__name__
         self._inputs = inputs
         self._outputs = outputs
@@ -29,6 +31,9 @@ class Task(threading.Thread):
         self._progress = 0
         self._notify_finished_callback = notify_finished_callback
         self._created = datetime.datetime.now()
+
+    def id(self):
+        return self._id
 
     def name(self):
         return self._name
@@ -90,7 +95,7 @@ class Task(threading.Thread):
         self.set_status(TaskStatus.CANCELED)
 
     def notify_finished(self):
-        self._notify_finished_callback(self.name())
+        self._notify_finished_callback(self.id())
 
     # LOGGING
 

@@ -5,6 +5,7 @@ from django.http import HttpResponseForbidden
 from ..managers.datamanager import DataManager
 from ..managers.taskmanager import TaskManager
 from ..tasks.taskregistry import TASK_REGISTRY
+from ..utils import create_name_with_timestamp
 
 
 @login_required
@@ -77,23 +78,18 @@ def run_task(request, task_name):
 
 
 @login_required
-def cancel_task(request, task_name):
-    if request.method == 'GET':
-        pass
-    return HttpResponseForbidden(f'Wrong method ({request.method})')
-
-
-@login_required
-def remove_task(request, task_name):
+def cancel_task(request, task_id):
     if request.method == 'GET':
         task_manager = TaskManager()
-        task_manager.remove_task(task_name)
+        task_manager.cancel_task(task_id)
         return redirect('/tasks/')
     return HttpResponseForbidden(f'Wrong method ({request.method})')
 
 
 @login_required
-def remove_all_tasks(request):
+def remove_task(request, task_id):
     if request.method == 'GET':
-        pass
+        task_manager = TaskManager()
+        task_manager.remove_task(task_id)
+        return redirect('/tasks/')
     return HttpResponseForbidden(f'Wrong method ({request.method})')

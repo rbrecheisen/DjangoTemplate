@@ -9,4 +9,4 @@ class ExampleTask(Task):
             delay = self.param('delay')
             time.sleep(delay)
             self.set_progress(i, self.param('nr_iters'))
-        return {'output1': []}
+        return {'output-exampletask': []}
