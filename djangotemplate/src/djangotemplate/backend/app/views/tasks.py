@@ -78,14 +78,22 @@ def run_task(request, task_name):
 
 @login_required
 def cancel_task(request, task_name):
-    pass
+    if request.method == 'GET':
+        pass
+    return HttpResponseForbidden(f'Wrong method ({request.method})')
 
 
 @login_required
 def remove_task(request, task_name):
-    pass
+    if request.method == 'GET':
+        task_manager = TaskManager()
+        task_manager.remove_task(task_name)
+        return redirect('/tasks/')
+    return HttpResponseForbidden(f'Wrong method ({request.method})')
 
 
 @login_required
 def remove_all_tasks(request):
-    pass
+    if request.method == 'GET':
+        pass
+    return HttpResponseForbidden(f'Wrong method ({request.method})')
