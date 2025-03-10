@@ -45,10 +45,10 @@
                             <td>{{ task.progress }}</td>
                             <td>
                                 {% if task.status == "running" %}
-                                    <a href="/tasks/{{ task_name }}/cancel">[cancel]</a>
+                                    <a href="/tasks/{{ task.name }}/cancel">[cancel]</a>
                                 {% endif %}
-                                {% if task.get_status == "completed" or task.get_status == "failed" or task.get_status == "canceled" %}
-                                    <a href="/tasks/{{ task_name }}/remove">[remove]</a>
+                                {% if task.status == "completed" or task.status == "failed" or task.status == "canceled" %}
+                                    <a href="/tasks/{{ task.name }}/remove">[remove]</a>
                                 {% endif %}
                             </td>
                         {% endfor %}

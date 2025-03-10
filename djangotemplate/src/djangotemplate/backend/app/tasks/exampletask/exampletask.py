@@ -1,15 +1,13 @@
 import time
 
 from ..task import Task
-from ...managers.logmanager import LogManager
-
-LOG = LogManager()
 
 
 class ExampleTask(Task):
     def execute(self):
         for i in range(self.param('nr_iters')):
+            self.log_info(f'Processing data...')
             delay = self.param('delay')
-            LOG.info(f'Waiting {delay} seconds...')
             time.sleep(delay)
+            self.set_progress(i, self.param('nr_iters'))
         return {'output1': []}

@@ -10,14 +10,8 @@ LOG = LogManager()
 
 @singleton
 class TaskManager:
-    def __init__(self, user=None):
-        self._user = user
+    def __init__(self):
         self._tasks = {}
-
-    def user(self):
-        return self._user
-
-    # TASKS
 
     def tasks(self):
         tasks = []
@@ -29,7 +23,7 @@ class TaskManager:
     def task_names(self):
         return sorted(TASK_REGISTRY.keys())
     
-    def task_ok(self, task_info, inputs, outputs, params):
+    def task_info_matches_registry(self, task_info, inputs, outputs, params):
         for input in task_info['inputs']:
             if input['name'] not in inputs.keys():
                 LOG.error('Input {} missing'.format(input['name']))
@@ -42,14 +36,13 @@ class TaskManager:
             if param['name'] not in params.keys():
                 LOG.error('Parameter {} missing'.format(param['name']))
                 return False
-            # TODO: Check param types as well
         return True
     
-    def run_task(self, task_name, inputs, outputs, params, wait_to_finish=False):
+    def run_task(self, task_name, inputs, outputs, params, user, wait_to_finish=False):
         task_info = TASK_REGISTRY.get(task_name, None)
         if task_info:
             # Check if task inputs, outputs and params match registry
-            if not self.task_ok(task_info, inputs, outputs, params):
+            if not self.task_info_matches_registry(task_info, inputs, outputs, params):
                 raise RuntimeError(f'Inputs, outputs or parameters provided for {task_name} do not match registry')
             # If task is already in the list, cancel and remove it
             if task_name in self._tasks.keys():
@@ -63,6 +56,7 @@ class TaskManager:
                     inputs, outputs, params, task_queue, self.task_finished
                 ),
                 'queue': task_queue,
+                'user': user,
             }
             # Start the task and wait if necessary
             self._tasks[task_name]['instance'].start()
@@ -90,10 +84,12 @@ class TaskManager:
             # Get outputs
             task_queue = self._tasks[task_name]['queue']
             outputs = task_queue.get() # Dictionary of lists of file paths
+            # Get user associated with task
+            user = self._tasks[task_name]['user']
             # Create fileset for each output
             data_manager = DataManager()
             for output in task_info['outputs']:
-                fileset = data_manager.create_fileset(self.user(), output['name'])
+                fileset = data_manager.create_fileset(user, output['name'])
                 file_paths = outputs[output['name']]
                 for file_path in file_paths:
                     data_manager.create_file(file_path, fileset)

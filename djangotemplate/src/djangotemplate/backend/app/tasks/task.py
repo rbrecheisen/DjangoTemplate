@@ -3,6 +3,10 @@ import threading
 
 from enum import Enum
 
+from ..managers.logmanager import LogManager
+
+LOG = LogManager()
+
 
 class TaskStatus(Enum):
     IDLE = 'idle'
@@ -48,16 +52,18 @@ class Task(threading.Thread):
         return self._queue
     
     def status(self):
-        return self._status
+        return self._status.value
 
     def set_status(self, status, message=None):
         self._status = status
+        self.log_info(f'status = {self._status.value} ({message})')
 
     def progress(self):
         return self._progress
     
     def set_progress(self, step, nr_steps):
         self._progress = int(((step + 1) / (nr_steps)) * 100)
+        self.log_info(f'progress = {self._progress}')
 
     def created(self):
         return self._created
@@ -84,4 +90,15 @@ class Task(threading.Thread):
         self.set_status(TaskStatus.CANCELED)
 
     def notify_finished(self):
-        self._notify_finished_callback()
+        self._notify_finished_callback(self.name())
+
+    # LOGGING
+
+    def log_info(self, message):
+        LOG.info(f'{self.__class__.__name__}: {message}')
+
+    def log_warning(self, message):
+        LOG.warning(f'{self.__class__.__name__}: {message}')
+
+    def log_error(self, message):
+        LOG.error(f'{self.__class__.__name__}: {message}')

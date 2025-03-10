@@ -12,8 +12,9 @@ def tasks(request):
     if request.method == 'GET':
         auto_refresh = True if request.GET.get('auto-refresh', '0') == '1' else False
         task_manager = TaskManager()
+        tasks = task_manager.tasks()
         all_finished = True
-        for task in task_manager.tasks():
+        for task in tasks:
             if task.status() == 'running':
                 all_finished = False
                 break
@@ -21,7 +22,7 @@ def tasks(request):
             auto_refresh = False
         return render(request, 'tasks.html', context={
             'task_names': task_manager.task_names(),
-            'tasks': task_manager.tasks(),
+            'tasks': tasks,
             'auto_refresh': auto_refresh,
         })
     return HttpResponseForbidden(f'Wrong method ({request.method})')
@@ -44,12 +45,6 @@ def task(request, task_name):
 
 @login_required
 def run_task(request, task_name):
-    """
-    1. Get input fileset IDs and parameters from request (ensure correct data types)
-    2. Pass them to task manager
-    3. Run task
-    4. Redirect to /tasks/
-    """
     if request.method == 'POST':
         # Get inputs and parameters from request
         data_manager = DataManager()
@@ -63,13 +58,20 @@ def run_task(request, task_name):
         for param in task_info['params']:
             param_value = request.POST.get(param['name'], None)
             if param_value:
-                params[param['name']] = param_value
+                # Get parameter type
+                param_type = param['type']
+                if param_type == 'int':
+                    params[param['name']] = int(param_value)
+                if param_type == 'float':
+                    params[param['name']] = float(param_value)
+                if param_type == 'text':
+                    params[param['name']] = param_value
         outputs = {}
         for output in task_info['outputs']:
             outputs[output['name']] = []
         # Run task though task manager
         task_manager = TaskManager()
-        task_manager.run_task(task_name, inputs, outputs, params)
+        task_manager.run_task(task_name, inputs, outputs, params, request.user)
         return redirect('/tasks/')
     return HttpResponseForbidden(f'Wrong method ({request.method})')
 
