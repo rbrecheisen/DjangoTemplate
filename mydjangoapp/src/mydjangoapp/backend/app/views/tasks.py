@@ -69,11 +69,17 @@ def run_task(request, task_name):
                     params[param['name']] = param_value
         outputs = {}
         for output in task_info['outputs']:
-            # output_name = request.POST.get(output['name'], '')
-            # if output_name == '':
-            #     output_name = create_name_with_timestamp(f'output-{task_name.lower()}')
-            # outputs[output_name] = []
-            outputs[output['name']] = []
+            output_name = request.POST.get(output['name'], '')
+            if output_name == '':
+                output_name = create_name_with_timestamp(f'output-{task_name.lower()}')
+            outputs[output['name']] = output_name
+        # outputs = {}
+        # for output in task_info['outputs']:
+        #     output_name = request.POST.get(output['name'], '')
+        #     if output_name == '':
+        #         output_name = create_name_with_timestamp(f'output-{task_name.lower()}')
+        #     outputs[output_name] = []
+        #     outputs[output['name']] = []
         # Run task though task manager
         task_manager = TaskManager()
         task_manager.run_task(task_name, inputs, outputs, params, request.user)

@@ -28,10 +28,10 @@ class TaskManager:
             if input['name'] not in inputs.keys():
                 LOG.error('Input {} missing'.format(input['name']))
                 return False
-        for output in task_info['outputs']:
-            if output['name'] not in outputs.keys():
-                LOG.error('Output {} missing'.format(output['name']))
-                return False
+        # for output in task_info['outputs']:
+        #     if output['name'] not in outputs.keys():
+        #         LOG.error('Output {} missing'.format(output['name']))
+        #         return False
         for param in task_info['params']:
             if param['name'] not in params.keys():
                 LOG.error('Parameter {} missing'.format(param['name']))
