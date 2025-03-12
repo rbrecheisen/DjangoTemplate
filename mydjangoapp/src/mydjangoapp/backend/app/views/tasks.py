@@ -23,6 +23,7 @@ def tasks(request):
             auto_refresh = False
         return render(request, 'tasks.html', context={
             'task_names': task_manager.task_names(),
+            'pipeline_names': task_manager.pipeline_names(),
             'active_tasks': active_tasks,
             'auto_refresh': auto_refresh,
         })
@@ -126,5 +127,5 @@ def run_pipeline(request, pipeline_name):
     intermediate filesets because we want to investigate what went wrong. 
     """
     if request.method == 'POST':
-        pass
+        return redirect('/tasks/')
     return HttpResponseForbidden(f'Wrong method ({request.method})')

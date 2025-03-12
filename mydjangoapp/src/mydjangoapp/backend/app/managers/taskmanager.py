@@ -76,5 +76,8 @@ class TaskManager:
 
     # PIPELINES
 
+    def pipeline_names(self):
+        return ['ExamplePipeline']
+
     def run_pipeline(self, config):
         pass
