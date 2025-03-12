@@ -17,6 +17,46 @@
                 <div class="card-body">
                     <form action="/pipelines/{{ pipeline_name }}/run" method="post" enctype="multipart/form-data" id="my-form">
                         {% csrf_token %}
+                        <textarea style="height: 400px;" class="form-control" rows="5" placeholder="Enter your text here...">
+{
+    "pipeline_name": "ExamplePipeline",
+    "input_dirs": [
+        {"name": "input1", "dir_path": "/path/to/input1"},
+        {"name": "input2", "dir_path": "/path/to/input2"}
+    ],
+    "output_dirs": [
+        {"name": "output1", "dir_path": "/path/to/output1"},
+        {"name": "output2", "dir_path": "/path/to/output2"}
+    ],
+    "tasks": [
+        {
+            "task_name": "ExampleTask",
+            "input_dirs": [],                           # Leave empty to inherit from pipeline input_dirs
+            "output_dirs": [
+                {"name": "output1", "dir_path": "/path/to/output1"},
+                {"name": "output2", "dir_path": "/path/to/output2"}
+            ],
+            "params": [
+                {"name": "nr_iters", "type": "int", "value": "5"},
+                {"name": "delay", "type": "int", "value": "1"}
+            ]
+        },
+        {
+            "task_name": "ExampleTask",
+            "input_dirs": [
+                {"name": "input1", "dir_path": "/path/to/output1"},     # Points to output previous task
+                {"name": "input2", "dir_path": "/path/to/output2"}      # Points to output previous task
+            ],
+            "output_dirs": [],                          # Leave empty to inherit from pipeline output_dirs
+            "params": [
+                {"name": "nr_iters", "type": "int", "value": "5"},
+                {"name": "delay", "type": "int", "value": "1"}
+            ]
+        },
+    ]
+}
+                        </textarea>
+                        <br>
                         <button type="submit" class="btn btn-primary">Run pipeline</button>
                     </form>
                 </div>
