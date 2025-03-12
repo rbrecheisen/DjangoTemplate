@@ -55,9 +55,6 @@ class Task(threading.Thread):
             return self._params[name]
         return default
     
-    # def queue(self):
-    #     return self._queue
-    
     def status(self):
         return self._status.value
 
