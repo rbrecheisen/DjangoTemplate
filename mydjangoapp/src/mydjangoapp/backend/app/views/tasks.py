@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
@@ -59,7 +61,6 @@ def run_task(request, task_name):
         params = {}
         for param in task_info['params']:
             param_value = request.POST.get(param['name'], None)
-            print('name: {}, value: {}'.format(param['name'], param_value))
             if param_value:
                 # Get parameter type
                 param_type = param['type']
@@ -71,8 +72,6 @@ def run_task(request, task_name):
                     params[param['name']] = True if param_value == '1' else False
                 if param_type == 'text':
                     params[param['name']] = param_value
-        print(task_info['params'])
-        print(params)
         # Get output fileset names from request
         output_fileset_names = {}
         for output in task_info['outputs']:
@@ -128,5 +127,9 @@ def run_pipeline(request, pipeline_name):
     intermediate filesets because we want to investigate what went wrong. 
     """
     if request.method == 'POST':
+        pipeline_config = request.POST.get('pipeline_config', None)
+        if pipeline_config:
+            task_manager = TaskManager()
+            task_manager.run_pipeline(json.loads(pipeline_config), request.user)
         return redirect('/tasks/')
     return HttpResponseForbidden(f'Wrong method ({request.method})')

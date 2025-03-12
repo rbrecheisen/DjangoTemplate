@@ -17,33 +17,31 @@
                 <div class="card-body">
                     <form action="/pipelines/{{ pipeline_name }}/run" method="post" enctype="multipart/form-data" id="my-form">
                         {% csrf_token %}
-                        <textarea style="height: 400px;" class="form-control" rows="5" placeholder="Enter your text here...">
+                        <textarea style="height: 400px;" name="pipeline_config" class="form-control" rows="5" placeholder="Enter your text here...">
 {
     "pipeline_name": "ExamplePipeline",
-    "input_dirs": [
-        {"name": "input1", "path": "D:\\Mosamatic\\DjangoTemplate\\ExamplePipeline\\input1"},
-        {"name": "input2", "path": "D:\\Mosamatic\\DjangoTemplate\\ExamplePipeline\\input2"}
-    ],
-    "output_dirs": [
-        {"name": "output", "path": "D:\\Mosamatic\\DjangoTemplate\\ExamplePipeline\\output"}
-    ],
     "tasks": [
         {
             "task_name": "MergeDirectoriesTask",
-            "input_dirs": [],
+            "input_dirs": [
+                {"name": "input1", "path": "D:\\Mosamatic\\DjangoTemplate\\ExamplePipeline\\input1"},
+                {"name": "input2", "path": "D:\\Mosamatic\\DjangoTemplate\\ExamplePipeline\\input2"}
+            ],
             "output_dirs": [
-                {"name": "output", "path": "D:\\Mosamatic\\DjangoTemplate\\ExamplePipeline\\MergeDirectoriesTask"}
+                {"name": "output1", "path": "D:\\Mosamatic\\DjangoTemplate\\ExamplePipeline\\MergeDirectoriesTask"}
             ],
             "params": []
         },
         {
             "task_name": "CopyFilesTask",
             "input_dirs": [
-                {"name": "input", "path": "D:\\Mosamatic\\DjangoTemplate\\ExamplePipeline\\MergeDirectoriesTask"}
+                {"name": "input1", "path": "D:\\Mosamatic\\DjangoTemplate\\ExamplePipeline\\MergeDirectoriesTask"}
             ],
-            "output_dirs": [],
+            "output_dirs": [
+                {"name": "output1", "path": "D:\\Mosamatic\\DjangoTemplate\\ExamplePipeline\\CopyFilesTask"}
+            ],
             "params": []
-        },
+        }
     ]
 }
                         </textarea>
