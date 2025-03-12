@@ -21,37 +21,28 @@
 {
     "pipeline_name": "ExamplePipeline",
     "input_dirs": [
-        {"name": "input1", "dir_path": "/path/to/input1"},
-        {"name": "input2", "dir_path": "/path/to/input2"}
+        {"name": "input1", "path": "D:\\Mosamatic\\DjangoTemplate\\ExamplePipeline\\input1"},
+        {"name": "input2", "path": "D:\\Mosamatic\\DjangoTemplate\\ExamplePipeline\\input2"}
     ],
     "output_dirs": [
-        {"name": "output1", "dir_path": "/path/to/output1"},
-        {"name": "output2", "dir_path": "/path/to/output2"}
+        {"name": "output", "path": "D:\\Mosamatic\\DjangoTemplate\\ExamplePipeline\\output"}
     ],
     "tasks": [
         {
-            "task_name": "ExampleTask",
-            "input_dirs": [],                           # Leave empty to inherit from pipeline input_dirs
+            "task_name": "MergeDirectoriesTask",
+            "input_dirs": [],
             "output_dirs": [
-                {"name": "output1", "dir_path": "/path/to/output1"},
-                {"name": "output2", "dir_path": "/path/to/output2"}
+                {"name": "output", "path": "D:\\Mosamatic\\DjangoTemplate\\ExamplePipeline\\MergeDirectoriesTask"}
             ],
-            "params": [
-                {"name": "nr_iters", "type": "int", "value": "5"},
-                {"name": "delay", "type": "int", "value": "1"}
-            ]
+            "params": []
         },
         {
-            "task_name": "ExampleTask",
+            "task_name": "CopyFilesTask",
             "input_dirs": [
-                {"name": "input1", "dir_path": "/path/to/output1"},     # Points to output previous task
-                {"name": "input2", "dir_path": "/path/to/output2"}      # Points to output previous task
+                {"name": "input", "path": "D:\\Mosamatic\\DjangoTemplate\\ExamplePipeline\\MergeDirectoriesTask"}
             ],
-            "output_dirs": [],                          # Leave empty to inherit from pipeline output_dirs
-            "params": [
-                {"name": "nr_iters", "type": "int", "value": "5"},
-                {"name": "delay", "type": "int", "value": "1"}
-            ]
+            "output_dirs": [],
+            "params": []
         },
     ]
 }
