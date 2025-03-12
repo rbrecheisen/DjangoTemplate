@@ -33,7 +33,7 @@ def tasks(request):
 def task(request, task_name):
     if request.method == 'GET':
         data_manager = DataManager()
-        return render(request, f'task.html', context={
+        return render(request, 'task.html', context={
             'task_name': task_name, 
             'task_description': TASK_REGISTRY[task_name]['description'],
             'input_filesets': TASK_REGISTRY[task_name]['input_filesets'],
@@ -97,4 +97,34 @@ def remove_task(request, task_id):
         task_manager = TaskManager()
         task_manager.remove_task(task_id)
         return redirect('/tasks/')
+    return HttpResponseForbidden(f'Wrong method ({request.method})')
+
+
+@login_required
+def pipeline(request, pipeline_name):
+    if request.method == 'GET':
+        return render(request, 'pipeline.html', context={
+            'pipeline_name': pipeline_name, 
+            'pipeline_description': 'This is an example pipeline',
+        })
+    return HttpResponseForbidden(f'Wrong method ({request.method})')
+
+
+@login_required
+def run_pipeline(request, pipeline_name):
+    """
+    What should happen when a pipeline is executed? First of all, the pipeline needs input data.
+    We cannot expect there to be an input fileset so files must be uploaded from disk. This means
+    the pipeline needs an *input directory*. Next, we have a sequence of tasks that we wish to
+    execute within this pipeline. Each task takes one or more filesets as input, has one or more
+    outputs and zero or more parameters. Each task's output should serve as input for the next
+    task. At the end of the pipeline, the last task's output becomes the output of the pipeline
+    and should be saved to an *output directory*. The pipeline output fileset should be visible
+    in the UI but all other task-related filesets must be deleted to save space.
+
+    What to do with errors? Whenever a pipeline runs into problems, it should not clean up its
+    intermediate filesets because we want to investigate what went wrong. 
+    """
+    if request.method == 'POST':
+        pass
     return HttpResponseForbidden(f'Wrong method ({request.method})')

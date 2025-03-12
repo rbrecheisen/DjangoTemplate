@@ -24,6 +24,20 @@
     <div class="row">
         <div class="col-sm-10">
             <div class="card" style="margin-top: 10px;">
+                <div class="card-header">Available pipelines</div>
+                <div class="card-body">
+                    <table class="table">
+                        {% for pipeline_name in pipeline_names %}
+                            <tr><td><a href="/pipelines/{{ pipeline_name }}">{{ pipeline_name }}</a></td></tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-10">
+            <div class="card" style="margin-top: 10px;">
                 <div class="card-header">Task instances</div>
                 <div class="card-body">
                     <input type="checkbox" class="form-check-input" id="auto-refresh" onclick="autoRefresh();" {% if auto_refresh %} checked {% endif %}>

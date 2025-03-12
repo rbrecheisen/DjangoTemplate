@@ -37,7 +37,7 @@ def test_user_can_run_example_task():
     }, params={
         'nr_iters': nr_iters,
         'delay': delay,
-    }, wait_to_finish=True)
+    }, user=user, wait_to_finish=True)
 
     # Wait a few seconds for the output to appear
     duration = nr_iters * delay + 1
