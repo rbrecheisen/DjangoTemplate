@@ -27,6 +27,7 @@
                             </select>
                             <br>
                         {% endfor %}
+                        <br>
                         <p><b>Parameters</b></p>
                         {% for param in params %}
                             <label for="{{ param.name }}" class="form-label">{{ param.label }}</label>
@@ -36,8 +37,12 @@
                             {% if param.type == "text" %}
                                 <input type="text" class="form-control" id="{{ param.name }}" name="{{ param.name }}" placeholder="Enter text" value="{{ param.value }}">
                             {% endif %}
+                            {% if param.type == "bool" %}
+                                <input class="form-check-input" type="checkbox" value="1" id="{{ param.name }}" name="{{ param.name }}">
+                            {% endif %}
                             <br>
                         {% endfor %}
+                        <br>
                         <p><b>Output fileset names</b></p>
                         {% for output in outputs %}
                             <input type="text" class="form-control" id="{{ output.name }}" name="{{ output.name }}" placeholder="{{ output.label }} (optional)" value="">

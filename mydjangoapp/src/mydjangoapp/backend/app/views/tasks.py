@@ -47,15 +47,7 @@ def task(request, task_name):
 
 @login_required
 def run_task(request, task_name):
-    """
-    This view does way too much! Just read the input fileset IDs from the request and pass them
-    to the task manager. Let the task manager retrieve the corresponding filesets. Same goes for
-    the output fileset names. Just pas them to the task manager. 
-
-    TODO: Update this code!!!!!
-    """
     if request.method == 'POST':
-        data_manager = DataManager()
         task_info = TASK_REGISTRY[task_name]
         # Get input filesets from request parameters
         input_fileset_ids = {}
@@ -67,6 +59,7 @@ def run_task(request, task_name):
         params = {}
         for param in task_info['params']:
             param_value = request.POST.get(param['name'], None)
+            print('name: {}, value: {}'.format(param['name'], param_value))
             if param_value:
                 # Get parameter type
                 param_type = param['type']
@@ -74,8 +67,12 @@ def run_task(request, task_name):
                     params[param['name']] = int(param_value)
                 if param_type == 'float':
                     params[param['name']] = float(param_value)
+                if param_type == 'bool':
+                    params[param['name']] = True if param_value == '1' else False
                 if param_type == 'text':
                     params[param['name']] = param_value
+        print(task_info['params'])
+        print(params)
         # Get output fileset names from request
         output_fileset_names = {}
         for output in task_info['outputs']:
