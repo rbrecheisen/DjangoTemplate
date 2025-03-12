@@ -37,9 +37,9 @@ def task(request, task_name):
         return render(request, 'task.html', context={
             'task_name': task_name, 
             'task_description': TASK_REGISTRY[task_name]['description'],
-            'input_filesets': TASK_REGISTRY[task_name]['input_filesets'],
+            'inputs': TASK_REGISTRY[task_name]['inputs'],
             'params': TASK_REGISTRY[task_name]['params'],
-            'output_filesets': TASK_REGISTRY[task_name]['output_filesets'],
+            'outputs': TASK_REGISTRY[task_name]['outputs'],
             'filesets': data_manager.filesets(request.user)
         })
     return HttpResponseForbidden(f'Wrong method ({request.method})')
@@ -47,15 +47,22 @@ def task(request, task_name):
 
 @login_required
 def run_task(request, task_name):
+    """
+    This view does way too much! Just read the input fileset IDs from the request and pass them
+    to the task manager. Let the task manager retrieve the corresponding filesets. Same goes for
+    the output fileset names. Just pas them to the task manager. 
+
+    TODO: Update this code!!!!!
+    """
     if request.method == 'POST':
         data_manager = DataManager()
         task_info = TASK_REGISTRY[task_name]
         # Get input filesets from request parameters
-        input_filesets = {}
-        for input_fileset in task_info['input_filesets']:
-            fileset_id = request.POST.get(input_fileset['name'])
+        input_fileset_ids = {}
+        for input in task_info['inputs']:
+            fileset_id = request.POST.get(input['name'])
             if fileset_id:
-                input_filesets[input_fileset['name']] = data_manager.fileset(fileset_id)
+                input_fileset_ids[input['name']] = fileset_id
         # Get task parameter values
         params = {}
         for param in task_info['params']:
@@ -71,14 +78,11 @@ def run_task(request, task_name):
                     params[param['name']] = param_value
         # Get output fileset names from request
         output_fileset_names = {}
-        for output_fileset in task_info['output_filesets']:
-            output_fileset_name = request.POST.get(output_fileset['name'], '')
-            if output_fileset_name == '':
-                output_fileset_name = create_name_with_timestamp(f'output-{task_name.lower()}')
-            output_fileset_names[output_fileset['name']] = output_fileset_name
-        # Run task though task manager
+        for output in task_info['outputs']:
+            output_fileset_names[output['name']] = request.POST.get(output['name'], None)
+        # Run task through task manager
         task_manager = TaskManager()
-        task_manager.run_task(task_name, input_filesets, output_fileset_names, params, request.user)
+        task_manager.run_task(task_name, input_fileset_ids, output_fileset_names, params, request.user)
         return redirect('/tasks/')
     return HttpResponseForbidden(f'Wrong method ({request.method})')
 

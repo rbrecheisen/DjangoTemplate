@@ -32,7 +32,7 @@ def test_user_can_run_example_task():
     task_manager.run_task(task_name='ExampleTask', input_filesets={
         'input1': data_manager.create_fileset_from_uploaded_files(user, file_paths, file_names, 'input1'),
         'input2': data_manager.create_fileset_from_uploaded_files(user, file_paths, file_names, 'input2'),
-    }, output_fileset_names={
+    }, output_fileset_ids={
         'output1': [],
     }, params={
         'nr_iters': nr_iters,

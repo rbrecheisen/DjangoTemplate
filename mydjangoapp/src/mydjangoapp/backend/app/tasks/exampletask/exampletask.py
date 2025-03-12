@@ -9,8 +9,3 @@ class ExampleTask(Task):
             delay = self.param('delay')
             time.sleep(delay)
             self.set_progress(i, self.param('nr_iters'))
-        output = []
-        output_fileset_name = self.output_fileset_name('output1')
-        if output_fileset_name:
-            return {output_fileset_name: output}
-        return {'output-exampletask': output}

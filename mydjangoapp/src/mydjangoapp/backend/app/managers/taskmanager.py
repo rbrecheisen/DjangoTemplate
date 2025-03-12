@@ -1,4 +1,4 @@
-import queue
+import os
 
 from ..tasks.taskregistry import TASK_REGISTRY
 from ..singleton import singleton
@@ -23,25 +23,39 @@ class TaskManager:
     def task_names(self):
         return sorted(TASK_REGISTRY.keys())
     
-    def run_task(self, task_name, input_filesets, output_fileset_names, params, user, wait_to_finish=False):
+    def run_task(self, task_name, input_fileset_ids, output_fileset_names, params, user, wait_to_finish=False):
         task_info = TASK_REGISTRY.get(task_name, None)
         if task_info:
-            # Get user from one of the input filesets. Does that make sense?
-            # Add the new task to the list with its own queue
-            task_queue = queue.Queue()
+            data_manager = DataManager()
+            # Get input files
+            input_files_dict = {}
+            for input_name in input_fileset_ids.keys():
+                fileset_id = input_fileset_ids[input_name]
+                fileset = data_manager.fileset(fileset_id)
+                if fileset:
+                    input_files_dict[input_name] = [f.path() for f in fileset.files()]
+            # Get output directories
+            output_dir_dict = {}
+            output_fileset_ids = []
+            for output_name in output_fileset_names.keys():
+                output_fileset_name = output_fileset_names[output_name]
+                fileset = data_manager.create_fileset(user, output_fileset_name)
+                output_dir_dict[output_name] = fileset.path()
+                output_fileset_ids.append(fileset.id())
+            # Instance task and run it
             task_instance = task_info['class'](
-                input_filesets, output_fileset_names, params, task_queue, self.task_finished)
+                input_files_dict, output_dir_dict, params, self.task_finished)
             task_instance_id = task_instance.id()
             self._tasks[task_instance_id] = {
                 'instance': task_instance,
-                'queue': task_queue,
+                'output_fileset_ids': output_fileset_ids,
                 'user': user,
             }
             # Start the task and wait if necessary
             self._tasks[task_instance_id]['instance'].start()
             if wait_to_finish:
                 self._tasks[task_instance_id]['instance'].join()
-
+    
     def cancel_task(self, task_name):
         if task_name in self._tasks.keys():
             self._tasks[task_name]['instance'].cancel()
@@ -61,18 +75,14 @@ class TaskManager:
         task_instance = self._tasks[task_id]['instance']
         task_info = TASK_REGISTRY.get(task_instance.name(), None)
         if task_info:
-            # Get outputs
-            task_queue = self._tasks[task_id]['queue']
-            outputs = task_queue.get() # Dictionary of lists of file paths
-            # Get user associated with task
-            user = self._tasks[task_id]['user']
             # Create fileset for each output
             data_manager = DataManager()
-            for output_name in outputs.keys():
-                fileset = data_manager.create_fileset(user, output_name)
-                file_paths = outputs[output_name]                
-                for file_path in file_paths:
-                    data_manager.create_file(file_path, fileset)
+            output_fileset_ids = self._tasks[task_id]['output_fileset_ids']
+            for output_fileset_id in output_fileset_ids:
+                fileset = data_manager.fileset(output_fileset_id)
+                if fileset:
+                    for f in os.listdir(fileset.path()):
+                        data_manager.create_file(os.path.join(fileset.path(), f), fileset)
 
     # PIPELINES
 

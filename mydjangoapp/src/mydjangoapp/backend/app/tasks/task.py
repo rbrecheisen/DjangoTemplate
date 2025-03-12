@@ -18,14 +18,13 @@ class TaskStatus(Enum):
     
 
 class Task(threading.Thread):
-    def __init__(self, input_filesets, output_fileset_names, params, queue, notify_finished_callback):
+    def __init__(self, input_files_dict, output_dir_dict, params, notify_finished_callback):
         super(Task, self).__init__()
         self._id = str(uuid.uuid4())
         self._name = self.__class__.__name__
-        self._input_filesets = input_filesets
-        self._output_fileset_names = output_fileset_names
+        self._input_files_dict = input_files_dict
+        self._output_dir_dict = output_dir_dict
         self._params = params
-        self._queue = queue
         self._status = TaskStatus.IDLE
         self._cancel_event = threading.Event()
         self._progress = 0
@@ -38,14 +37,17 @@ class Task(threading.Thread):
     def name(self):
         return self._name
     
-    def input_fileset(self, name):
-        if name in self._input_filesets.keys():
-            return self._input_filesets[name]
+    def input_files_dict(self):
+        return self._input_files_dict
+    
+    def input_files(self, name):
+        if name in self._input_files_dict.keys():
+            return self._input_files_dict[name]
         return None
     
-    def output_fileset_name(self, name):
-        if name in self._output_fileset_names.keys():
-            return self._output_fileset_names[name]
+    def output_dir(self, name):
+        if name in self._output_dir_dict.keys():
+            return self._output_dir_dict[name]
         return None
     
     def param(self, name, default=None):
@@ -53,8 +55,8 @@ class Task(threading.Thread):
             return self._params[name]
         return default
     
-    def queue(self):
-        return self._queue
+    # def queue(self):
+    #     return self._queue
     
     def status(self):
         return self._status.value
@@ -76,9 +78,9 @@ class Task(threading.Thread):
     def run(self):
         try:
             self.set_status(TaskStatus.RUNNING)
-            output = self.execute()
+            self.execute()
             if not self.is_canceled():
-                self.queue().put(output)
+                # self.queue().put(output)
                 self.notify_finished()
                 self.set_status(TaskStatus.COMPLETED)
         except Exception as e:

@@ -6,7 +6,7 @@ TASK_REGISTRY = {
         'class': ExampleTask,
         'title': 'Example Task with two inputs and one output',
         'description': 'Some description',
-        'input_filesets': [
+        'inputs': [
             {
                 'name': 'input1',
                 'label': 'Select input 1',
@@ -16,7 +16,7 @@ TASK_REGISTRY = {
                 'label': 'Select input 2',
             },
         ],
-        'output_filesets': [
+        'outputs': [
             {
                 'name': 'output1',
                 'label': 'Enter name output 1 (optional)',
@@ -44,3 +44,47 @@ TASK_REGISTRY = {
         ],
     },
 }
+
+# TASK_REGISTRY = {
+#     'ExampleTask': {
+#         'class': ExampleTask,
+#         'title': 'Example Task with two inputs and one output',
+#         'description': 'Some description',
+#         'input_filesets': [
+#             {
+#                 'name': 'input1',
+#                 'label': 'Select input 1',
+#             },
+#             {
+#                 'name': 'input2',
+#                 'label': 'Select input 2',
+#             },
+#         ],
+#         'output_filesets': [
+#             {
+#                 'name': 'output1',
+#                 'label': 'Enter name output 1 (optional)',
+#             }
+#         ],
+#         'params': [
+#             {
+#                 'name': 'nr_iters', 
+#                 'label': 'Number of iterations',
+#                 'type': 'int', 
+#                 'min': 0,
+#                 'max': 100,
+#                 'step': 1,
+#                 'value': 5,
+#             },
+#             {
+#                 'name': 'delay', 
+#                 'label': 'Delay (s)',
+#                 'type': 'int',
+#                 'min': 0,
+#                 'max': 10,
+#                 'step': 1,
+#                 'value': 1,
+#             },
+#         ],
+#     },
+# }
