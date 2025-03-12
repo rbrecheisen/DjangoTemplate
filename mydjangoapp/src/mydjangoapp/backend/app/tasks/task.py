@@ -18,12 +18,12 @@ class TaskStatus(Enum):
     
 
 class Task(threading.Thread):
-    def __init__(self, inputs, outputs, params, queue, notify_finished_callback):
+    def __init__(self, input_filesets, output_fileset_names, params, queue, notify_finished_callback):
         super(Task, self).__init__()
         self._id = str(uuid.uuid4())
         self._name = self.__class__.__name__
-        self._inputs = inputs
-        self._outputs = outputs
+        self._input_filesets = input_filesets
+        self._output_fileset_names = output_fileset_names
         self._params = params
         self._queue = queue
         self._status = TaskStatus.IDLE
@@ -38,14 +38,14 @@ class Task(threading.Thread):
     def name(self):
         return self._name
     
-    def input(self, name):
-        if name in self._inputs.keys():
-            return self._inputs[name]
+    def input_fileset(self, name):
+        if name in self._input_filesets.keys():
+            return self._input_filesets[name]
         return None
     
-    def output(self, name):
-        if name in self._outputs.keys():
-            return self._outputs[name]
+    def output_fileset_name(self, name):
+        if name in self._output_fileset_names.keys():
+            return self._output_fileset_names[name]
         return None
     
     def param(self, name, default=None):

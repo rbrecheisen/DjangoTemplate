@@ -29,10 +29,10 @@ def test_user_can_run_example_task():
     nr_iters, delay = 5, 2
 
     # Run example task and check its output has length > 0
-    task_manager.run_task(task_name='ExampleTask', inputs={
+    task_manager.run_task(task_name='ExampleTask', input_filesets={
         'input1': data_manager.create_fileset_from_uploaded_files(user, file_paths, file_names, 'input1'),
         'input2': data_manager.create_fileset_from_uploaded_files(user, file_paths, file_names, 'input2'),
-    }, outputs={
+    }, output_fileset_names={
         'output1': [],
     }, params={
         'nr_iters': nr_iters,

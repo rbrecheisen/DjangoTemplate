@@ -6,7 +6,7 @@ TASK_REGISTRY = {
         'class': ExampleTask,
         'title': 'Example Task with two inputs and one output',
         'description': 'Some description',
-        'inputs': [ # Always type fileset
+        'input_filesets': [
             {
                 'name': 'input1',
                 'label': 'Select input 1',
@@ -15,6 +15,12 @@ TASK_REGISTRY = {
                 'name': 'input2',
                 'label': 'Select input 2',
             },
+        ],
+        'output_filesets': [
+            {
+                'name': 'output1',
+                'label': 'Enter name output 1 (optional)',
+            }
         ],
         'params': [
             {
@@ -35,12 +41,6 @@ TASK_REGISTRY = {
                 'step': 1,
                 'value': 1,
             },
-        ],
-        'outputs': [ # Always type fileset
-            {
-                'name': 'output1',
-                'label': 'Enter name for output 1',
-            }
         ],
     },
 }

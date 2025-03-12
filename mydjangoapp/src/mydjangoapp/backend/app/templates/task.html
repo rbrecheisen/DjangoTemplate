@@ -14,9 +14,9 @@
                     <form action="/tasks/{{ task_name }}/run" method="post" enctype="multipart/form-data" id="my-form">
                         {% csrf_token %}
                         <p><b>Input filesets</b></p>
-                        {% for input in inputs %}
-                            <select class="form-select" id="{{ input.name }}" name="{{ input.name }}">
-                                <option selected>{{ input.label }}</option>
+                        {% for input_fileset in input_filesets %}
+                            <select class="form-select" id="{{ input_fileset.name }}" name="{{ input_fileset.name }}">
+                                <option selected>{{ input_fileset.label }}</option>
                                 {% for fileset in filesets %}
                                     <option value="{{ fileset.id }}">{{ fileset.name }}</option>
                                 {% endfor %}
@@ -34,11 +34,11 @@
                             {% endif %}
                             <br>
                         {% endfor %}
-                        <!-- <p><b>Output fileset names</b></p>
-                        {% for output in outputs %}
-                            <input type="text" class="form-control" id="{{ output.name }}" name="{{ output.name }}" placeholder="{{ output.label }} (optional)" value="">
+                        <p><b>Output fileset names</b></p>
+                        {% for output_fileset in output_filesets %}
+                            <input type="text" class="form-control" id="{{ output_fileset.name }}" name="{{ output_fileset.name }}" placeholder="{{ output_fileset.label }} (optional)" value="">
                             <br>
-                        {% endfor %} -->
+                        {% endfor %}
                         <button type="submit" class="btn btn-primary">Run task</button>
                     </form>
                 </div>

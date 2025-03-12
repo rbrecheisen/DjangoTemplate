@@ -13,9 +13,9 @@ def tasks(request):
     if request.method == 'GET':
         auto_refresh = True if request.GET.get('auto-refresh', '0') == '1' else False
         task_manager = TaskManager()
-        tasks = task_manager.tasks()
+        active_tasks = task_manager.active_tasks()
         all_finished = True
-        for task in tasks:
+        for task in active_tasks:
             if task.status() == 'running':
                 all_finished = False
                 break
@@ -23,7 +23,7 @@ def tasks(request):
             auto_refresh = False
         return render(request, 'tasks.html', context={
             'task_names': task_manager.task_names(),
-            'tasks': tasks,
+            'active_tasks': active_tasks,
             'auto_refresh': auto_refresh,
         })
     return HttpResponseForbidden(f'Wrong method ({request.method})')
@@ -36,9 +36,9 @@ def task(request, task_name):
         return render(request, f'task.html', context={
             'task_name': task_name, 
             'task_description': TASK_REGISTRY[task_name]['description'],
-            'inputs': TASK_REGISTRY[task_name]['inputs'],
+            'input_filesets': TASK_REGISTRY[task_name]['input_filesets'],
             'params': TASK_REGISTRY[task_name]['params'],
-            'outputs': TASK_REGISTRY[task_name]['outputs'],
+            'output_filesets': TASK_REGISTRY[task_name]['output_filesets'],
             'filesets': data_manager.filesets(request.user)
         })
     return HttpResponseForbidden(f'Wrong method ({request.method})')
@@ -47,14 +47,15 @@ def task(request, task_name):
 @login_required
 def run_task(request, task_name):
     if request.method == 'POST':
-        # Get inputs and parameters from request
         data_manager = DataManager()
         task_info = TASK_REGISTRY[task_name]
-        inputs = {}
-        for input in task_info['inputs']:
-            fileset_id = request.POST.get(input['name'])
+        # Get input filesets from request parameters
+        input_filesets = {}
+        for input_fileset in task_info['input_filesets']:
+            fileset_id = request.POST.get(input_fileset['name'])
             if fileset_id:
-                inputs[input['name']] = data_manager.fileset(fileset_id)
+                input_filesets[input_fileset['name']] = data_manager.fileset(fileset_id)
+        # Get task parameter values
         params = {}
         for param in task_info['params']:
             param_value = request.POST.get(param['name'], None)
@@ -67,22 +68,16 @@ def run_task(request, task_name):
                     params[param['name']] = float(param_value)
                 if param_type == 'text':
                     params[param['name']] = param_value
-        outputs = {}
-        for output in task_info['outputs']:
-            output_name = request.POST.get(output['name'], '')
-            if output_name == '':
-                output_name = create_name_with_timestamp(f'output-{task_name.lower()}')
-            outputs[output['name']] = output_name
-        # outputs = {}
-        # for output in task_info['outputs']:
-        #     output_name = request.POST.get(output['name'], '')
-        #     if output_name == '':
-        #         output_name = create_name_with_timestamp(f'output-{task_name.lower()}')
-        #     outputs[output_name] = []
-        #     outputs[output['name']] = []
+        # Get output fileset names from request
+        output_fileset_names = {}
+        for output_fileset in task_info['output_filesets']:
+            output_fileset_name = request.POST.get(output_fileset['name'], '')
+            if output_fileset_name == '':
+                output_fileset_name = create_name_with_timestamp(f'output-{task_name.lower()}')
+            output_fileset_names[output_fileset['name']] = output_fileset_name
         # Run task though task manager
         task_manager = TaskManager()
-        task_manager.run_task(task_name, inputs, outputs, params, request.user)
+        task_manager.run_task(task_name, input_filesets, output_fileset_names, params, request.user)
         return redirect('/tasks/')
     return HttpResponseForbidden(f'Wrong method ({request.method})')
 
