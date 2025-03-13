@@ -14,7 +14,7 @@ class MergeDirectoriesTask(Task):
         for input_files in self.inputs().values():
             for source in input_files:
                 source_name = os.path.split(source)[1]
-                target = os.path.join(self.output_dir('output1'), source_name)
+                target = os.path.join(self.output('output'), source_name)
                 if keep_duplicates and os.path.exists(target):
                     items = os.path.splitext(target)
                     target = items[0] + '-1' + items[1]

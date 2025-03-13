@@ -1,4 +1,5 @@
 import uuid
+import os
 import datetime
 import threading
 
@@ -19,12 +20,15 @@ class TaskStatus(Enum):
     
 
 class Task(threading.Thread):
-    def __init__(self, inputs: Dict[str, List[str]], output_dirs: Dict[str, str], params: Dict[str, Any], notify_finished_callback: Any) -> None:
+    def __init__(self, inputs: Dict[str, List[str]], outputs: Dict[str, str], params: Dict[str, Any], notify_finished_callback: Any) -> None:
         super(Task, self).__init__()
         self._id = str(uuid.uuid4())
         self._name = self.__class__.__name__
         self._inputs = inputs
-        self._output_dirs = output_dirs
+        self._outputs = outputs
+        # Create output directories if they do not already exist
+        for output_dir in self._outputs.values():
+            os.makedirs(output_dir, exist_ok=True)
         self._params = params
         self._status = TaskStatus.IDLE
         self._cancel_event = threading.Event()
@@ -46,12 +50,12 @@ class Task(threading.Thread):
             return self._inputs[name]
         return None
     
-    def output_dirs(self):
-        return self._output_dirs
+    def outputs(self):
+        return self._outputs
     
-    def output_dir(self, name):
-        if name in self._output_dirs.keys():
-            return self._output_dirs[name]
+    def output(self, name):
+        if name in self._outputs.keys():
+            return self._outputs[name]
         return None
     
     def param(self, name, default=None):
@@ -77,15 +81,15 @@ class Task(threading.Thread):
         return self._created
     
     def run(self):
-        try:
-            self.set_status(TaskStatus.RUNNING)
-            self.execute()
-            if not self.is_canceled():
-                # self.queue().put(output)
-                self.notify_finished()
-                self.set_status(TaskStatus.COMPLETED)
-        except Exception as e:
-            self.set_status(TaskStatus.FAILED, str(e))
+        # try:
+        self.set_status(TaskStatus.RUNNING)
+        self.execute()
+        if not self.is_canceled():
+            # self.queue().put(output)
+            self.notify_finished()
+            self.set_status(TaskStatus.COMPLETED)
+        # except Exception as e:
+        #     self.set_status(TaskStatus.FAILED, str(e))
 
     def execute(self):
         raise NotImplementedError('Must be implemented in child class')
@@ -98,7 +102,8 @@ class Task(threading.Thread):
         self.set_status(TaskStatus.CANCELED)
 
     def notify_finished(self):
-        self._notify_finished_callback(self.id())
+        if self._notify_finished_callback:
+            self._notify_finished_callback(self.id())
 
     # LOGGING
 

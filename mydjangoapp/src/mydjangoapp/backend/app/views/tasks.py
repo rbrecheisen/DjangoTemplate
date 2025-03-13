@@ -6,6 +6,7 @@ from django.http import HttpResponseForbidden
 
 from ..managers.datamanager import DataManager
 from ..managers.taskmanager import TaskManager
+from ..managers.pipelinemanager import PipelineManager
 from ..tasks.taskregistry import TASK_REGISTRY
 from ..utils import create_name_with_timestamp
 
@@ -113,23 +114,11 @@ def pipeline(request, pipeline_name):
 
 @login_required
 def run_pipeline(request, pipeline_name):
-    """
-    What should happen when a pipeline is executed? First of all, the pipeline needs input data.
-    We cannot expect there to be an input fileset so files must be uploaded from disk. This means
-    the pipeline needs an *input directory*. Next, we have a sequence of tasks that we wish to
-    execute within this pipeline. Each task takes one or more filesets as input, has one or more
-    outputs and zero or more parameters. Each task's output should serve as input for the next
-    task. At the end of the pipeline, the last task's output becomes the output of the pipeline
-    and should be saved to an *output directory*. The pipeline output fileset should be visible
-    in the UI but all other task-related filesets must be deleted to save space.
-
-    What to do with errors? Whenever a pipeline runs into problems, it should not clean up its
-    intermediate filesets because we want to investigate what went wrong. 
-    """
     if request.method == 'POST':
         pipeline_config = request.POST.get('pipeline_config', None)
         if pipeline_config:
             task_manager = TaskManager()
-            task_manager.run_pipeline(json.loads(pipeline_config), request.user)
+            # task_manager.run_pipeline(json.loads(pipeline_config))
+            task_manager.run_pipeline()
         return redirect('/tasks/')
     return HttpResponseForbidden(f'Wrong method ({request.method})')
