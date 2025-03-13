@@ -20,27 +20,31 @@
                         <textarea style="height: 400px;" name="pipeline_config" class="form-control" rows="5" placeholder="Enter your text here...">
 {
     "pipeline_name": "ExamplePipeline",
+    "input": "D:\\Mosamatic\\DjangoTemplate\\ExamplePipeline\\input",
+    "output": "D:\\Mosamatic\\DjangoTemplate\\ExamplePipeline\\output",
     "tasks": [
         {
-            "task_name": "MergeDirectoriesTask",
-            "input_dirs": [
-                {"name": "input1", "path": "D:\\Mosamatic\\DjangoTemplate\\ExamplePipeline\\input1"},
-                {"name": "input2", "path": "D:\\Mosamatic\\DjangoTemplate\\ExamplePipeline\\input2"}
-            ],
-            "output_dirs": [
-                {"name": "output1", "path": "D:\\Mosamatic\\DjangoTemplate\\ExamplePipeline\\MergeDirectoriesTask"}
-            ],
-            "params": []
+            "name": "MergeDirectoriesTask",
+            "inputs": {
+                "input1": "__pipeline.input__",
+                "input2": "__pipeline.input__"
+            },
+            "outputs": {
+                "output": "D:\\Mosamatic\\DjangoTemplate\\ExamplePipeline\\MergeDirectoriesTask"
+            },
+            "params": {
+                "keep_duplicates": true
+            }
         },
         {
-            "task_name": "CopyFilesTask",
-            "input_dirs": [
-                {"name": "input1", "path": "D:\\Mosamatic\\DjangoTemplate\\ExamplePipeline\\MergeDirectoriesTask"}
-            ],
-            "output_dirs": [
-                {"name": "output1", "path": "D:\\Mosamatic\\DjangoTemplate\\ExamplePipeline\\CopyFilesTask"}
-            ],
-            "params": []
+            "name": "CopyFilesTask",
+            "inputs": {
+                "input": "__MergeDirectoriesTask.outputs.output__"
+            },
+            "outputs": {
+                "output": "__pipeline.output__"
+            },
+            "params": null
         }
     ]
 }

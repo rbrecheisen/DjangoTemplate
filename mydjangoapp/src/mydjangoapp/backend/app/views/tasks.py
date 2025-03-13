@@ -118,7 +118,6 @@ def run_pipeline(request, pipeline_name):
         pipeline_config = request.POST.get('pipeline_config', None)
         if pipeline_config:
             task_manager = TaskManager()
-            # task_manager.run_pipeline(json.loads(pipeline_config))
-            task_manager.run_pipeline()
+            task_manager.run_pipeline(json.loads(pipeline_config))
         return redirect('/tasks/')
     return HttpResponseForbidden(f'Wrong method ({request.method})')

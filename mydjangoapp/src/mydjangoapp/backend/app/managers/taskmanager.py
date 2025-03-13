@@ -90,37 +90,8 @@ class TaskManager:
     def pipeline_names(self):
         return ['ExamplePipeline']
 
-    def run_pipeline(self, config={
-        'name': 'ExamplePipeline',
-        'input_dir': 'D:\\Mosamatic\\DjangoTemplate\\ExamplePipeline\\input',
-        'output_dir': 'D:\\Mosamatic\\DjangoTemplate\\ExamplePipeline\\output',
-        'tasks': [
-            {
-                'name': 'MergeDirectoriesTask',
-                'inputs': {
-                    'input1': '__pipeline.input_dir__',
-                    'input2': '__pipeline.input_dir__'
-                },
-                'outputs': {
-                    'output': 'D:\\Mosamatic\\DjangoTemplate\\ExamplePipeline\\MergeDirectoriesTask'
-                },
-                'params': {
-                    'keep_duplicates': True
-                }
-            },
-            {
-                'name': 'CopyFilesTask',
-                'inputs': {
-                    'input': '__MergeDirectoriesTask.outputs.output__'
-                },
-                'outputs': {
-                    'output': '__pipeline.output_dir__'
-                },
-                'params': None
-            }
-        ]
-    }):
-        # Resolve file and directory paths
+    def run_pipeline(self, config):
+        # Define inline function to resolve file and directory paths
         def resolve_dir(dir_path, config):
             if dir_path.startswith('__pipeline'):
                 dir_name = dir_path.split('__')[1].split('.')[1]
@@ -133,7 +104,6 @@ class TaskManager:
                         return task_info[key][name]
                 raise RuntimeError()
             return dir_path
-        
         # Parse config and print updated version
         for task_info in config['tasks']:
             for input_name in task_info['inputs'].keys():
@@ -142,33 +112,19 @@ class TaskManager:
             for output_name in task_info['outputs'].keys():
                 dir_path = resolve_dir(task_info['outputs'][output_name], config)
                 task_info['outputs'][output_name] = dir_path
-
         print(json.dumps(config, indent=4))
-
         # Run tasks in sequence
         for task_info in config['tasks']:
-
-            # Get inputs
             inputs = {}
             for input_name in task_info['inputs'].keys():
                 input_files = []
                 for f in os.listdir(task_info['inputs'][input_name]):
                     input_files.append(os.path.join(task_info['inputs'][input_name], f))
                 inputs[input_name] = input_files
-
-            # Get outputs
             outputs = {}
             for output_name in task_info['outputs'].keys():
                 outputs[output_name] = task_info['outputs'][output_name]
-
-            # Get parameters
             params = task_info['params']
-
-            print('Running task {}'.format(task_info['name']))
-            print(' - inputs: {}'.format(inputs))
-            print(' - outputs: {}'.format(outputs))
-            print(' - params: {}'.format(params))
-
             # Execute task
             task_instance = TASK_REGISTRY[task_info['name']]['class'](inputs, outputs, params, None)
             task_instance.start()
