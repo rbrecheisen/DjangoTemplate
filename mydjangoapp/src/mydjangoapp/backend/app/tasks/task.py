@@ -2,6 +2,7 @@ import uuid
 import datetime
 import threading
 
+from typing import List, Dict, Any
 from enum import Enum
 
 from ..managers.logmanager import LogManager
@@ -18,12 +19,12 @@ class TaskStatus(Enum):
     
 
 class Task(threading.Thread):
-    def __init__(self, input_files_dict, output_dir_dict, params, notify_finished_callback):
+    def __init__(self, inputs: Dict[str, List[str]], output_dirs: Dict[str, str], params: Dict[str, Any], notify_finished_callback: Any) -> None:
         super(Task, self).__init__()
         self._id = str(uuid.uuid4())
         self._name = self.__class__.__name__
-        self._input_files_dict = input_files_dict
-        self._output_dir_dict = output_dir_dict
+        self._inputs = inputs
+        self._output_dirs = output_dirs
         self._params = params
         self._status = TaskStatus.IDLE
         self._cancel_event = threading.Event()
@@ -37,17 +38,20 @@ class Task(threading.Thread):
     def name(self):
         return self._name
     
-    def input_files_dict(self):
-        return self._input_files_dict
+    def inputs(self):
+        return self._inputs
     
-    def input_files(self, name):
-        if name in self._input_files_dict.keys():
-            return self._input_files_dict[name]
+    def input(self, name):
+        if name in self._inputs.keys():
+            return self._inputs[name]
         return None
     
+    def output_dirs(self):
+        return self._output_dirs
+    
     def output_dir(self, name):
-        if name in self._output_dir_dict.keys():
-            return self._output_dir_dict[name]
+        if name in self._output_dirs.keys():
+            return self._output_dirs[name]
         return None
     
     def param(self, name, default=None):

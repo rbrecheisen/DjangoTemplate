@@ -28,23 +28,23 @@ class TaskManager:
         if task_info:
             data_manager = DataManager()
             # Get input files
-            input_files_dict = {}
-            for input_name in input_fileset_ids.keys():
-                fileset_id = input_fileset_ids[input_name]
+            inputs = {}
+            for name in input_fileset_ids.keys():
+                fileset_id = input_fileset_ids[name]
                 fileset = data_manager.fileset(fileset_id)
                 if fileset:
-                    input_files_dict[input_name] = [f.path() for f in fileset.files()]
+                    inputs[name] = [f.path() for f in fileset.files()]
             # Get output directories
-            output_dir_dict = {}
+            output_dirs = {}
             output_fileset_ids = []
-            for output_name in output_fileset_names.keys():
-                output_fileset_name = output_fileset_names[output_name]
+            for name in output_fileset_names.keys():
+                output_fileset_name = output_fileset_names[name]
                 fileset = data_manager.create_fileset(user, output_fileset_name)
-                output_dir_dict[output_name] = fileset.path()
+                output_dirs[name] = fileset.path()
                 output_fileset_ids.append(fileset.id())
             # Instance task and run it
             task_instance = task_info['class'](
-                input_files_dict, output_dir_dict, params, self.task_finished)
+                inputs, output_dirs, params, self.task_finished)
             task_instance_id = task_instance.id()
             self._tasks[task_instance_id] = {
                 'instance': task_instance,

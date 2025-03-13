@@ -6,7 +6,7 @@ from ..task import Task
 
 class CopyFilesTask(Task):
     def execute(self):
-        input_files = self.input_files('input1')
+        input_files = self.input('input1')
         nr_steps = len(input_files)
         for step in range(nr_steps):
             source = input_files[step]
