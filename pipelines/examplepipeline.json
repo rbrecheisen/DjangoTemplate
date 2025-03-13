@@ -1,0 +1,30 @@
+{
+    "pipeline_name": "ExamplePipeline",
+    "input": "D:\\Mosamatic\\DjangoTemplate\\ExamplePipeline\\input",
+    "output": "D:\\Mosamatic\\DjangoTemplate\\ExamplePipeline\\output",
+    "tasks": [
+        {
+            "name": "MergeDirectoriesTask",
+            "inputs": {
+                "input1": "__pipeline.input__",
+                "input2": "__pipeline.input__"
+            },
+            "outputs": {
+                "output": "D:\\Mosamatic\\DjangoTemplate\\ExamplePipeline\\MergeDirectoriesTask"
+            },
+            "params": {
+                "keep_duplicates": true
+            }
+        },
+        {
+            "name": "CopyFilesTask",
+            "inputs": {
+                "input": "__MergeDirectoriesTask.outputs.output__"
+            },
+            "outputs": {
+                "output": "__pipeline.output__"
+            },
+            "params": null
+        }
+    ]
+}
