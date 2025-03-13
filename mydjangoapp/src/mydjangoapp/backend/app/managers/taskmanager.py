@@ -90,36 +90,30 @@ class TaskManager:
         return ['ExamplePipeline']
 
     def run_pipeline(self, config, user):
-        """
-        For each task I need an input_files_dict, output_dirs_dict and params.
-        Start with first task in the list. If it's the first, its inputs should be
-        set to the pipeline's inputs. 
-        """
-        data_manager = DataManager()
-
-        for task_info in config['tasks']:
-            task_name = task_info['task_name']
-
-            # Obtain input fileset IDs
-            task_fileset_ids = {}
-            for input in task_info['input_dirs']:
-                f_names = []
-                f_paths = []
-                for f in os.listdir(input['path']):
-                    f_names.append(f)
-                    f_paths.append(os.path.join(input['path'], f))
-                    fileset = data_manager.create_fileset_from_uploaded_files(user, f_paths, f_names, input['name'])
-                    task_fileset_ids[input['name']] = fileset.id()
-
-            task_output_fileset_names = {}
-            for output in task_info['output_dirs']:
-                output_fileset_name = os.path.split(output['path'])[1]
-                task_output_fileset_names[output['name']] = output_fileset_name
-
-            task_params = task_info['params']
-            task_wait_to_finish = True
-
-            self.run_task(task_name, task_fileset_ids, task_output_fileset_names, task_params, user, task_wait_to_finish)
-
-        # Get last task's output fileset and save in output_dir
+        # """
+        # For each task I need an input_files_dict, output_dirs_dict and params.
+        # Start with first task in the list. If it's the first, its inputs should be
+        # set to the pipeline's inputs. 
+        # """
+        # data_manager = DataManager()
+        # for task_info in config['tasks']:
+        #     task_name = task_info['task_name']
+        #     # Obtain input fileset IDs
+        #     task_fileset_ids = {}
+        #     for input in task_info['input_dirs']:
+        #         f_names = []
+        #         f_paths = []
+        #         for f in os.listdir(input['path']):
+        #             f_names.append(f)
+        #             f_paths.append(os.path.join(input['path'], f))
+        #             fileset = data_manager.create_fileset_from_uploaded_files(user, f_paths, f_names, input['name'])
+        #             task_fileset_ids[input['name']] = fileset.id()
+        #     task_output_fileset_names = {}
+        #     for output in task_info['output_dirs']:
+        #         output_fileset_name = os.path.split(output['path'])[1]
+        #         task_output_fileset_names[output['name']] = output_fileset_name
+        #     task_params = task_info['params']
+        #     task_wait_to_finish = True
+        #     self.run_task(task_name, task_fileset_ids, task_output_fileset_names, task_params, user, task_wait_to_finish)
+        # # Get last task's output fileset and save in output_dir
         pass
