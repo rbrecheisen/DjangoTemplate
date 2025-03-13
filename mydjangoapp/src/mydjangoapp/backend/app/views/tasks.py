@@ -6,9 +6,7 @@ from django.http import HttpResponseForbidden
 
 from ..managers.datamanager import DataManager
 from ..managers.taskmanager import TaskManager
-from ..managers.pipelinemanager import PipelineManager
 from ..tasks.taskregistry import TASK_REGISTRY
-from ..utils import create_name_with_timestamp
 
 
 @login_required

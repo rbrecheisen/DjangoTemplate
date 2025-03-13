@@ -49,6 +49,8 @@ services:
       - SECRET_KEY=f9sd7f97sdf89as7fd98as7d9f7sad9f
     volumes:
       - mydjangoapp_data:/data
+      # Mount this directory to allow Django to access pipeline data
+      - D:\\Mosamatic\\DjangoTemplate\\ExamplePipeline\\input:/pipeline_data/input
     depends_on:
       db:
         condition: service_healthy
